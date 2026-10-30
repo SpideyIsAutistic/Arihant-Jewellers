@@ -1,0 +1,25 @@
+# dependencies & builds
+node_modules
+.next
+out
+*.tsbuildinfo
+next-env.d.ts
+.firebase/
+
+# secrets — every env file except the blank template
+.env
+.env.*
+!.env.example
+
+# local data (old server database, live-store copy made at build time)
+data/
+
+# not part of the site
+_old-server-version/
+_photos/
+.sync/
+scripts/mac-shell-mcp.py
+
+# logs & OS files
+*.log
+.DS_Store

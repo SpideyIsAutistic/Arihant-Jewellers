@@ -8,6 +8,7 @@ import { Slideshow, type Slide } from "@/components/home/Slideshow";
 import { TabbedProducts } from "@/components/home/TabbedProducts";
 import { TileRow } from "@/components/home/Tiles";
 import { TrustBar } from "@/components/home/TrustBar";
+import { ServiceBanners } from "@/components/home/ServiceBanners";
 import { CategoryMosaic } from "@/components/home/CategoryMosaic";
 import { ShopTheLook, type LookSpot } from "@/components/home/ShopTheLook";
 import { Testimonials } from "@/components/home/Testimonials";
@@ -97,6 +98,10 @@ function Home({ data }: { data: HomeData }) {
     <>
       <h1 className="sr-only">Arihant Jewellers — gold, diamond and gemstone jewellery in Thane</h1>
       <Slideshow slides={banners.hero.map(toSlide)} priority />
+
+      <section className="page-width pt-2" aria-label="Festive offers and services">
+        <ServiceBanners />
+      </section>
 
       <Section title="Explore Our Bestsellers" id="bestsellers-title">
         <div className="page-width">

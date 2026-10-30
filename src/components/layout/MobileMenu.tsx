@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { MAIN_NAV } from "@/config/navigation";
 import { Drawer } from "@/components/ui/Drawer";
-import { IconChevronDown, IconHeart, IconMail, IconPin } from "@/components/ui/Icons";
+import { IconGem, IconUser, IconChevronDown, IconHeart, IconMail, IconPin } from "@/components/ui/Icons";
 import { cn } from "@/lib/utils";
 
 export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -48,6 +48,16 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
         </ul>
         <ul className="space-y-4 px-6 py-6 text-[12px] font-medium tracking-[0.12em] uppercase text-subtle">
           <li>
+            <Link href="/pages/custom-design" onClick={onClose} className="flex items-center gap-3 text-ink hover:text-subtle transition-colors">
+              <IconGem size={18} /> Custom design
+            </Link>
+          </li>
+          <li>
+            <Link href="/account" onClick={onClose} className="flex items-center gap-3 hover:text-ink transition-colors">
+              <IconUser size={18} /> My enquiries
+            </Link>
+          </li>
+          <li>
             <Link href="/wishlist" onClick={onClose} className="flex items-center gap-3 hover:text-ink transition-colors">
               <IconHeart size={18} /> Wishlist
             </Link>
@@ -61,6 +71,12 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
             <Link href="/pages/store" onClick={onClose} className="flex items-center gap-3 hover:text-ink transition-colors">
               <IconPin size={18} /> Store locator
             </Link>
+          </li>
+          <li className="flex items-center gap-3 normal-case tracking-normal text-[14px]">
+            <span aria-hidden>अ</span>
+            <Link href="/hi/gold-rate-today" hrefLang="hi" onClick={onClose} className="hover:text-ink">हिंदी</Link>
+            <span aria-hidden>·</span>
+            <Link href="/mr/gold-rate-today" hrefLang="mr" onClick={onClose} className="hover:text-ink">मराठी</Link>
           </li>
         </ul>
       </nav>

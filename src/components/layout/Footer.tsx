@@ -108,7 +108,11 @@ export function Footer({ settings }: { settings: StoreSettings }) {
             Enquire about any piece — we reply on WhatsApp &amp; email
           </Link>
         </div>
-        <p className="pb-10 text-center text-[10px] tracking-[0.2em] text-subtle uppercase">
+        <p className="mb-2 text-center text-[13px] text-body2">
+            <Link href="/hi/gold-rate-today" hrefLang="hi" className="hover:text-ink">हिंदी</Link> ·{" "}
+            <Link href="/mr/gold-rate-today" hrefLang="mr" className="hover:text-ink">मराठी</Link>
+          </p>
+          <p className="pb-10 text-center text-[10px] tracking-[0.2em] text-subtle uppercase">
           © {year} {s.legalName}. All rights reserved.
           {s.gstin && <span className="ml-2 font-mono">GSTIN: {s.gstin}</span>}
         </p>

@@ -23,6 +23,8 @@ export function screen(form: FormData, kind: Form, text = ""): Verdict {
   return "ok";
 }
 
+export const recentCount = (kind: Form) => recent(kind).length;
+
 function recent(kind: Form): number[] {
   try {
     const hourAgo = Date.now() - 3600_000;

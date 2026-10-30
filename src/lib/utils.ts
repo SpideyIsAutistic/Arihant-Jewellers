@@ -62,3 +62,8 @@ export function toE164(input: string): string | null {
   if (/^(91|0)\d{10}$/.test(v)) return `+91${v.slice(-10)}`;
   return /^\+\d{10,15}$/.test(v) ? v : null;
 }
+
+/** Still the first import's generic description (two templates: jewellery and loose gemstones). */
+export const isTemplateCopy = (p: { name: string; description: string | null }) =>
+  !!p.description &&
+  (p.description.startsWith(`${p.name} from the Arihant Jewellers collection`) || /^Natural .+ from Arihant Jewellers' gemstone collection\./.test(p.description));

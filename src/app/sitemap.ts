@@ -44,6 +44,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.6,
     },
     { url: absoluteUrl("/gold-rate-today"), lastModified: now, changeFrequency: "daily", priority: 0.8 },
+    ...["/hi/gold-rate-today", "/mr/gold-rate-today", "/festive/dhanteras-diwali", "/hi/dhanteras", "/mr/dhanteras", "/gold-exchange", "/pages/gold-savings-scheme", "/pages/custom-design"].map((p) => ({
+      url: absoluteUrl(p),
+      lastModified: now,
+      changeFrequency: "weekly" as const,
+      priority: 0.7,
+    })),
     { url: absoluteUrl("/pages/book-appointment"), lastModified: now, changeFrequency: "monthly", priority: 0.6 },
     { url: absoluteUrl("/pages/ring-size-guide"), lastModified: now, changeFrequency: "yearly", priority: 0.5 },
     { url: absoluteUrl("/guides"), lastModified: now, changeFrequency: "monthly", priority: 0.6 },

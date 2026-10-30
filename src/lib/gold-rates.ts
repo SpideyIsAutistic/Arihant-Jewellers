@@ -71,6 +71,35 @@ export function getProductPurityKey(
   return "22k"; // standard Indian gold jewellery default
 }
 
+/** Rate (₹/g) for a product's purity, or null for metals we don't price (e.g. platinum). */
+export function rateFor(p: { metal: string; purity?: string | null; name?: string }, r: MetalRates): number | null {
+  const metal = p.metal.toLowerCase();
+  if (metal !== "gold" && metal !== "silver") return null;
+  const key = metal === "silver" ? "silver" : getProductPurityKey(p.purity, p.name);
+  return { "24k": r.gold24k, "22k": r.gold22k, "18k": r.gold18k, "14k": r.gold14k, silver: r.silver }[key];
+}
+
+export type RatePrice = { rate: number; metalValue: number; making: number; stones: number; gst: number; total: number }; // ₹, except total in paise
+
+/**
+ * Jeweller's formula: (weight × today's rate + making % + stone value) + 3% GST.
+ * Only when the admin has entered weight and making %, and rates were saved in the last 48 hours —
+ * otherwise null, and the product keeps its typed price (or "Price on request").
+ */
+export function rateBasedPrice(
+  p: { metal: string; purity?: string | null; name?: string; weightGrams?: number | null; makingPct?: number | null; stoneValue?: number | null },
+  r: MetalRates,
+): RatePrice | null {
+  if (!p.weightGrams || p.weightGrams <= 0 || p.makingPct == null || ratesAgeHours(r) > 48) return null;
+  const rate = rateFor(p, r);
+  if (!rate) return null;
+  const metalValue = p.weightGrams * rate;
+  const making = (metalValue * p.makingPct) / 100;
+  const stones = (p.stoneValue ?? 0) / 100;
+  const gst = (metalValue + making + stones) * 0.03;
+  return { rate, metalValue, making, stones, gst, total: Math.round((metalValue + making + stones + gst) * 100) };
+}
+
 /**
  * Calculates the dynamic price adjustment (in paise) for a product based on current gold rates.
  * Formula: weightGrams * (currentRate - benchmarkRate) * 1.03 (incl 3% GST)
@@ -84,7 +113,7 @@ export function getMetalPriceAdjustment(
   },
   rates: MetalRates,
 ): number {
-  if (!rates.enabled || !product.weightGrams || product.weightGrams <= 0) return 0;
+  if (!rates.enabled || !product.weightGrams || product.weightGrams <= 0 || !rates.lastUpdated) return 0;
   const isGold = product.metal.toLowerCase() === "gold";
   if (!isGold) return 0;
 
@@ -119,6 +148,9 @@ export type MetalPriceBreakup = {
   totalPrice: number; // in ₹
   rateDeltaPerGram: number; // in ₹
   isLive: boolean;
+  stones?: number; // in ₹
+  metalName?: string;
+  ratesDate?: string; // ISO, when the rate was saved
 };
 
 /** Provides full transparent price breakup for gold jewellery */
@@ -128,12 +160,31 @@ export function getProductPriceBreakup(
     metal: string;
     purity?: string | null;
     weightGrams?: number | null;
+    makingPct?: number | null;
+    stoneValue?: number | null;
     name?: string;
   },
   effectivePricePaise: number,
   rates: MetalRates,
 ): MetalPriceBreakup | null {
-  if (product.metal.toLowerCase() !== "gold" || !product.weightGrams) return null;
+  const f = rateBasedPrice(product, rates);
+  if (f)
+    return {
+      purity: product.metal.toLowerCase() === "silver" ? "Silver" : getProductPurityKey(product.purity, product.name).toUpperCase(),
+      metalName: product.metal,
+      ratePerGram: f.rate,
+      grossWeight: product.weightGrams!,
+      goldValue: Math.round(f.metalValue),
+      makingCharges: Math.round(f.making),
+      stones: Math.round(f.stones),
+      gst: Math.round(f.gst),
+      totalPrice: Math.round(f.total / 100),
+      rateDeltaPerGram: 0,
+      isLive: true,
+      ratesDate: rates.lastUpdated,
+    };
+  // typed price: only show a breakup when there is a price to break up
+  if (product.metal.toLowerCase() !== "gold" || !product.weightGrams || effectivePricePaise <= 0 || !rates.lastUpdated) return null;
   const purityKey = getProductPurityKey(product.purity, product.name);
   const purityLabels: Record<string, string> = {
     "24k": "24K (99.9% Pure Gold)",

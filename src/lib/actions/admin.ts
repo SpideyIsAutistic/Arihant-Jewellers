@@ -6,7 +6,8 @@ import { signOut } from "firebase/auth";
 import { auth, db } from "@/lib/firebase";
 import { mutateCatalog, mutateContent, newId, revive } from "@/lib/data";
 import { rupeesToPaise } from "@/lib/format";
-import { slugify, toE164 } from "@/lib/utils";
+import { isTemplateCopy, slugify, toE164 } from "@/lib/utils";
+import { compressImage } from "@/lib/image";
 import { saveSettings, getRawSettings, type StoreSettings, type TrustItem } from "@/lib/settings";
 import { saveMetalRates, fetchLiveMarketRates } from "@/lib/gold-rates";
 import { DEFAULT_POLICIES, type PolicySlug } from "@/lib/policies";
@@ -126,6 +127,8 @@ export async function saveProduct(_: FormState, form: FormData): Promise<FormSta
         gender: str(form, "gender") || "Women",
         stone: opt(form, "stone"),
         weightGrams: str(form, "weightGrams") ? parseFloat(str(form, "weightGrams")) : null,
+        makingPct: str(form, "makingPct") ? Math.max(0, parseFloat(str(form, "makingPct"))) : null,
+        stoneValue: paise(form, "stoneValue"),
         dimensions: opt(form, "dimensions"),
         price,
         compareAtPrice: paise(form, "compareAtPrice"),
@@ -403,7 +406,7 @@ export async function deleteSubscriber(form: FormData) {
 
 /* ───────── Enquiries (contact form + product enquiries) ───────── */
 
-export type Enquiry = { id: string; name: string; email: string; phone: string; message: string; product: string; page: string; status: "new" | "contacted" | "closed"; notes: string; createdAt: Date; kind?: "visit" | "video"; when?: string };
+export type Enquiry = { id: string; name: string; email: string; phone: string; message: string; product: string; page: string; status: "new" | "contacted" | "closed"; notes: string; createdAt: Date; kind?: import("./store").EnquiryKind; when?: string; photo?: string };
 
 export async function listEnquiries(): Promise<Enquiry[]> {
   const snap = await getDocs(collection(db(), "enquiries"));
@@ -459,29 +462,13 @@ export async function removeAdmin(form: FormData) {
 
 /** Resizes to ≤1600px WebP in the browser and stores it as media/<id>. Returns "media:<id>". */
 export async function uploadImage(file: File): Promise<string> {
-  const bmp = await createImageBitmap(file);
-  let max = 1600;
-  let data = "";
-  for (let q = 0.82; ; q -= 0.12) {
-    const scale = Math.min(1, max / Math.max(bmp.width, bmp.height));
-    const c = document.createElement("canvas");
-    c.width = Math.round(bmp.width * scale);
-    c.height = Math.round(bmp.height * scale);
-    c.getContext("2d")!.drawImage(bmp, 0, 0, c.width, c.height);
-    data = c.toDataURL("image/webp", q);
-    if (data.length < 700_000) break; // Firestore docs cap at 1 MB
-    if (q < 0.5) {
-      max = Math.round(max * 0.75);
-      q = 0.94;
-    }
-  }
+  const data = await compressImage(file);
   const ref = await addDoc(collection(db(), "media"), { data, name: file.name.slice(0, 120), createdAt: Date.now() });
   return `media:${ref.id}`;
 }
 
 /** Products still carrying the first import's template description ("<name> from the Arihant Jewellers collection…"). */
-export const hasTemplateCopy = (p: { name: string; description: string | null }) =>
-  !!p.description?.startsWith(`${p.name} from the Arihant Jewellers collection`);
+export const hasTemplateCopy = isTemplateCopy;
 
 /** Copies the rewritten descriptions from /seed/catalog.json, only onto products nobody has edited since import. */
 export async function applyProductCopy(): Promise<FormState> {
@@ -571,12 +558,16 @@ export async function saveStoreSettings(_: FormState, form: FormData): Promise<F
       googleReviewUrl: str(form, "googleReviewUrl"),
       googleRating: str(form, "googleRating").replace(/[^\d.]/g, "").slice(0, 3),
       googleReviewCount: str(form, "googleReviewCount").replace(/\D/g, ""),
+      gaId: str(form, "gaId").toUpperCase(),
+      metaPixelId: str(form, "metaPixelId").replace(/\D/g, ""),
+      searchConsoleCode: str(form, "searchConsoleCode").replace(/^.*content="([^"]+)".*$/, "$1"),
       popularSearches: lines(str(form, "popularSearches")),
       trustBadges: trust(str(form, "trustBadges")),
       serviceBadges: trust(str(form, "serviceBadges")),
       aboutTitle: str(form, "aboutTitle") || current.aboutTitle,
       aboutText: str(form, "aboutText"),
       aboutPage: String(form.get("aboutPage") ?? "").trim(),
+      schemeDetails: String(form.get("schemeDetails") ?? "").trim(),
       faqs,
       policies: Object.fromEntries(
         (Object.keys(DEFAULT_POLICIES) as PolicySlug[]).map((k) => {

@@ -2,6 +2,7 @@
 
 import { create } from "zustand";
 import { requireLogin } from "@/store/customer";
+import { trackLead } from "@/lib/analytics";
 
 /** Store-wide contact details, filled in by the store layout once settings load. */
 export const useSiteInfo = create<{ whatsapp: string; set: (v: { whatsapp: string }) => void }>((set) => ({
@@ -20,6 +21,9 @@ export function enquire(p: { name: string; slug: string; sku?: string | null }, 
   const url = `${window.location.origin}/products/${p.slug}`;
   const text = `Hi Arihant Jewellers, I'm interested in "${p.name}"${p.sku ? ` (${p.sku})` : ""}${extra ? ` — ${extra}` : ""}. ${url}`;
   const wa = whatsappUrl(useSiteInfo.getState().whatsapp, text);
-  if (wa) window.open(wa, "_blank", "noopener,noreferrer");
+  if (wa) {
+    trackLead("whatsapp");
+    window.open(wa, "_blank", "noopener,noreferrer");
+  }
   else window.location.assign(`/products/${p.slug}#enquire`);
 }

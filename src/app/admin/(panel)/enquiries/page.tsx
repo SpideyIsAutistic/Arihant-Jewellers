@@ -7,6 +7,8 @@ import {
   updateEnquiry,
 } from "@/lib/actions/admin";
 import { useLoad } from "@/lib/use-load";
+import { getSettings } from "@/lib/settings";
+import { ENQUIRY_KINDS } from "@/lib/actions/store";
 import { whatsappUrl } from "@/store/site";
 import {
   ActionForm,
@@ -19,17 +21,18 @@ import { PageLoader } from "@/components/ui/PageLoader";
 const TONE = { new: "warn", contacted: "neutral", closed: "good" } as const;
 
 export default function EnquiriesAdmin() {
-  const { data: rows, error } = useLoad(listEnquiries);
-  if (!rows) return <PageLoader error={error} />;
+  const { data, error } = useLoad(() => Promise.all([listEnquiries(), getSettings()]));
+  if (!data) return <PageLoader error={error} />;
+  const [rows, settings] = data;
   return (
     <>
       <PageHeader
         title={`Enquiries (${rows.filter((r) => r.status === "new").length} new)`}
       />
       <p className="mb-4 text-[14px] text-body2">
-        Messages from the Contact page and each product&apos;s &ldquo;Send an
-        enquiry&rdquo; form. They are also emailed to you when a Web3Forms key
-        is set in Settings.
+        Messages, product enquiries, appointments, old-gold quotes, savings
+        scheme and custom design requests, and &ldquo;notify me&rdquo; requests.
+        They are also emailed to you when a Web3Forms key is set in Settings.
       </p>
       {rows.length === 0 && (
         <p className="border border-line bg-white px-4 py-10 text-center text-subtle">
@@ -82,7 +85,7 @@ export default function EnquiriesAdmin() {
               </div>
               {r.kind && (
                 <p className="mt-2 text-[14px]">
-                  <Badge tone="dark">{r.kind === "visit" ? "Showroom visit" : "Video call"}</Badge> <b>{r.when}</b>
+                  <Badge tone="dark">{ENQUIRY_KINDS[r.kind] ?? r.kind}</Badge> {r.when && <b>{r.when}</b>}
                 </p>
               )}
               {r.product && (
@@ -105,6 +108,30 @@ export default function EnquiriesAdmin() {
               <p className="mt-2 text-[14px] whitespace-pre-line text-body2">
                 {r.message}
               </p>
+              {r.photo && (
+                <details className="mt-2">
+                  <summary className="cursor-pointer text-[13px] underline">
+                    Customer&apos;s photo
+                  </summary>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={r.photo} alt="Reference sent by the customer" className="mt-2 max-h-[420px] max-w-full border border-line" />
+                </details>
+              )}
+              {digits.length >= 10 && settings.googleReviewUrl && (
+                <a
+                  href={
+                    whatsappUrl(
+                      digits.length === 10 ? `91${digits}` : digits,
+                      `Hi ${r.name}, thank you for choosing Arihant Jewellers! If you have a minute, a Google review would mean a lot to us: ${settings.googleReviewUrl}`,
+                    ) ?? undefined
+                  }
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-2 inline-block text-[13px] underline"
+                >
+                  Ask for a Google review on WhatsApp
+                </a>
+              )}
               {/* key remounts the form with the saved values (React resets forms after an action) */}
               <ActionForm
                 key={`${r.status}|${r.notes}`}

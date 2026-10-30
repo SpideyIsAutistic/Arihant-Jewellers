@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { fontSans, fontSerif } from "@/fonts";
 import "./globals.css";
+import { getServerSettings } from "@/lib/server-catalog";
 
 const siteUrl =
   !process.env.NEXT_PUBLIC_SITE_URL ||
@@ -8,8 +9,11 @@ const siteUrl =
     ? "https://arihant-jewellers-9dffa.web.app"
     : process.env.NEXT_PUBLIC_SITE_URL;
 
+const searchConsole = getServerSettings().searchConsoleCode;
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
+  ...(searchConsole ? { verification: { google: searchConsole } } : {}),
   alternates: {
     canonical: "./",
   },

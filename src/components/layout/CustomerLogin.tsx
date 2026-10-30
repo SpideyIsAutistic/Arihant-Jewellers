@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import { useEffect, useState } from "react";
 import {
   isSignInWithEmailLink,
@@ -72,17 +74,24 @@ export function CustomerLogin() {
   }, []);
 
   const fail = (e: unknown) => {
+    console.error("Customer sign-in error:", e);
     const code = (e as { code?: string }).code ?? "";
+    const msg = (e as { message?: string }).message ?? "";
+    if (code === "auth/popup-closed-by-user" || code === "auth/cancelled-popup-request") {
+      return setError("");
+    }
+    if (code === "auth/unauthorized-domain") {
+      return setError(
+        `Domain not authorized in Firebase: "${window.location.hostname}". Please add this domain to Firebase Console → Authentication → Settings → Authorized domains.`,
+      );
+    }
     setError(
-      code === "auth/popup-closed-by-user" ||
-        code === "auth/cancelled-popup-request"
-        ? ""
-        : code === "auth/invalid-email"
-          ? "Please enter a valid email address."
-          : code === "auth/invalid-action-code" ||
-              code === "auth/expired-action-code"
-            ? "This sign-in link has expired or was already used. Please request a new one."
-            : "Sign-in didn't work. Please try again.",
+      code === "auth/invalid-email"
+        ? "Please enter a valid email address."
+        : code === "auth/invalid-action-code" ||
+            code === "auth/expired-action-code"
+          ? "This sign-in link has expired or was already used. Please request a new one."
+          : msg || "Sign-in didn't work. Please try again.",
     );
   };
 
@@ -147,6 +156,9 @@ export function CustomerLogin() {
             <p className="text-[15px]">
               Signed in as <b>{user.email ?? user.displayName}</b>
             </p>
+            <Link href="/account" className="btn h-[46px] w-full" onClick={() => setOpen(false)}>
+              My enquiries
+            </Link>
             <button
               type="button"
               className="btn-outline h-[46px] w-full"

@@ -2,11 +2,15 @@ import Link from "next/link";
 import { pageMeta, faqJsonLd, JsonLd } from "@/lib/seo";
 import { LiveRatesTable } from "./rates";
 
-export const metadata = pageMeta(
+const meta = pageMeta(
   "Gold Rate Today in Thane (22K, 24K, 18K)",
   "Today's gold and silver rate in Thane per gram and per 10 grams for 24K, 22K and 18K gold, from Arihant Jewellers, Ghodbunder Road.",
   "/gold-rate-today",
 );
+export const metadata = {
+  ...meta,
+  alternates: { canonical: "/gold-rate-today", languages: { en: "/gold-rate-today", hi: "/hi/gold-rate-today", mr: "/mr/gold-rate-today", "x-default": "/gold-rate-today" } },
+};
 
 const FAQS = [
   {
@@ -32,7 +36,9 @@ export default function GoldRatePage() {
     <div className="narrow-width py-14 sm:py-20">
       <h1 className="h-section">Gold Rate Today in Thane</h1>
       <p className="mt-4 text-center text-[15px] text-body2">
-        Today&apos;s gold and silver rates at Arihant Jewellers, Ghodbunder Road, Thane West, per gram and per 10 grams.
+        Today&apos;s gold and silver rates at Arihant Jewellers, Ghodbunder Road, Thane West, per gram and per 10 grams.{" "}
+        <Link href="/hi/gold-rate-today" hrefLang="hi" className="underline">हिंदी</Link> ·{" "}
+        <Link href="/mr/gold-rate-today" hrefLang="mr" className="underline">मराठी</Link>
       </p>
       <LiveRatesTable />
       <div className="mt-12 space-y-8 text-[15px] leading-relaxed text-body2">

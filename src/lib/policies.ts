@@ -42,6 +42,9 @@ Your details are stored in our website database (Google Firebase), which only ou
 ## Storage on your device
 Your browser remembers your sign-in, wishlist and recently viewed items. Signing out clears your wishlist from that browser.
 
+## Analytics and advertising
+If switched on, we use Google Analytics to understand how the website is used and the Meta Pixel to measure our Instagram and Facebook ads. These services set cookies and receive information about your visit, such as pages viewed and whether you sent an enquiry. They do not receive your name, email or phone number from us.
+
 ## Your choices
 You may ask us to access, correct or delete your personal information, including your account, by contacting {contact}.
 

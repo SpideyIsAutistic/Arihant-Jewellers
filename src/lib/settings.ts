@@ -32,12 +32,18 @@ export type StoreSettings = {
   googleReviewUrl: string;
   googleRating: string;
   googleReviewCount: string;
+  /** Google Analytics 4 measurement ID (G-…), Meta Pixel ID, Search Console HTML-tag verification code. */
+  gaId: string;
+  metaPixelId: string;
+  searchConsoleCode: string;
   popularSearches: string[];
   trustBadges: TrustItem[];
   serviceBadges: TrustItem[];
   aboutTitle: string;
   aboutText: string;
   aboutPage: string;
+  /** Gold savings scheme terms shown on /pages/gold-savings-scheme (blank = "ask us"). */
+  schemeDetails: string;
   faqs: { q: string; a: string }[];
   policies: Partial<Record<"shipping-policy" | "refund-policy" | "privacy-policy" | "terms-of-service", string>>;
 };
@@ -74,6 +80,9 @@ export const DEFAULT_SETTINGS: StoreSettings = {
   googleReviewUrl: "https://search.google.com/local/writereview?placeid=ChIJBeh1Juu75zsR-NzD5q8_zqA",
   googleRating: "4.8",
   googleReviewCount: "305",
+  gaId: "",
+  metaPixelId: "",
+  searchConsoleCode: "",
   popularSearches: ["Diamond Rings", "Mangalsutra", "Gold Chain", "Emerald", "Bridal Necklace", "Men's Rings", "Yellow Sapphire", "Necklace Set"],
   trustBadges: [
     { icon: "purity", label: "Certified Purity" },
@@ -101,6 +110,7 @@ Arihant Jewellers brings together traditional craftsmanship and contemporary des
 
 ## Visit us
 We would love to welcome you at our showroom in Thane West. Find our address and opening hours on the Store page, or message us on WhatsApp any time.`,
+  schemeDetails: "",
   faqs: [
     { q: "Can I buy jewellery directly on this website?", a: "This website is our catalogue. Tap “Enquire on WhatsApp” or send an enquiry on any product and our team will confirm the price, availability and how to purchase — usually within a few hours." },
     { q: "Why do some pieces say “Price on request”?", a: "Gold prices change every day with the metal rate, and many pieces are one-of-a-kind. Ask us on WhatsApp and we'll share today's price and weight." },

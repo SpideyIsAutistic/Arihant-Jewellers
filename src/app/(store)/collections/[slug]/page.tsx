@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import CollectionPage from "@/views/CollectionPage";
 import { getAllCollectionSlugs, getServerListing } from "@/lib/server-catalog";
 import { absoluteUrl } from "@/lib/utils";
+import { metaDescription } from "@/lib/seo";
 
 export const dynamicParams = false;
 
@@ -17,12 +18,6 @@ type Props = {
   params: Promise<{ slug: string }>;
 };
 
-/** 70–155 characters: short descriptions get the fallback added, long ones are cut at a word. */
-function metaDescription(text: string, fallback: string) {
-  let d = text.trim();
-  if (d.length < 70) d = d ? `${d.replace(/\.?$/, ".")} ${fallback}` : fallback;
-  return d.length <= 155 ? d : `${d.slice(0, 152).replace(/\s+\S*$/, "")}…`;
-}
 
 /** JPG version of the collection banner from scripts/og-images.py, else the default share card. */
 function shareImage(image?: string | null) {

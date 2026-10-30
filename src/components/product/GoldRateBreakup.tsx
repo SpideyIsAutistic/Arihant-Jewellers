@@ -51,12 +51,12 @@ export function GoldRateBreakup({ breakup }: { breakup: MetalPriceBreakup }) {
             </div>
 
             <div className="flex justify-between text-body2">
-              <span>Current Gold Rate ({breakup.purity})</span>
+              <span>Today&apos;s {breakup.metalName === "Silver" ? "silver" : "gold"} rate ({breakup.purity})</span>
               <span className="font-medium text-ink">₹{breakup.ratePerGram.toLocaleString("en-IN")} / g</span>
             </div>
 
             <div className="flex justify-between text-body2">
-              <span>Pure Gold Component Value</span>
+              <span>{breakup.metalName === "Silver" ? "Silver" : "Gold"} value</span>
               <span className="font-medium text-ink">{formatPrice(breakup.goldValue * 100)}</span>
             </div>
 
@@ -64,6 +64,13 @@ export function GoldRateBreakup({ breakup }: { breakup: MetalPriceBreakup }) {
               <span>Craftsmanship & Making Charges</span>
               <span className="font-medium text-ink">{formatPrice(breakup.makingCharges * 100)}</span>
             </div>
+
+            {!!breakup.stones && (
+              <div className="flex justify-between text-body2">
+                <span>Diamonds / stones</span>
+                <span className="font-medium text-ink">{formatPrice(breakup.stones * 100)}</span>
+              </div>
+            )}
 
             <div className="flex justify-between text-body2">
               <span>Applicable GST (3%)</span>
@@ -77,7 +84,9 @@ export function GoldRateBreakup({ breakup }: { breakup: MetalPriceBreakup }) {
           </div>
 
           <div className="mt-4 border-t border-line/60 pt-3 text-[11px] leading-relaxed text-subtle">
-            Arihant Jewellers prices update in real-time with official market bullion rates. 100% BIS hallmarked gold certified for purity.
+            {breakup.ratesDate
+              ? `Based on Arihant Jewellers' rate saved ${new Date(breakup.ratesDate).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" })}. Weight is approximate; the final price is confirmed at the showroom.`
+              : "Weight is approximate; the final price is confirmed at the showroom."}
           </div>
         </div>
       )}

@@ -23,3 +23,10 @@ export const faqJsonLd = (faqs: { q: string; a: string }[]) => ({
 export function JsonLd({ data }: { data: object }) {
   return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />;
 }
+
+/** 70–155 characters: short descriptions get the fallback added, long ones are cut at a word. */
+export function metaDescription(text: string, fallback: string) {
+  let d = text.trim();
+  if (d.length < 70) d = d ? `${d.replace(/\.?$/, ".")} ${fallback}` : fallback;
+  return d.length <= 155 ? d : `${d.slice(0, 152).replace(/\s+\S*$/, "")}…`;
+}

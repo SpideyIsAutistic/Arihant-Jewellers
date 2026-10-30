@@ -13,6 +13,7 @@ import type { TrustItem } from "@/lib/settings";
 import type { MetalPriceBreakup } from "@/lib/gold-rates";
 import { GoldRateBreakup } from "./GoldRateBreakup";
 import { EnquiryForm } from "./EnquiryForm";
+import { NotifyMe } from "./NotifyMe";
 
 type V = { id: string; title: string; stock: number; price: number; compareAt: number | null; discountPct: number; sku: string | null };
 
@@ -122,6 +123,12 @@ export function ProductInfo({ product, variants, trustBadges, shareUrl, metalBre
       )}
 
       <div ref={ctaRef} id="enquire" className="mt-8 max-w-[440px] scroll-mt-32 space-y-3.5">
+        {variants.length > 0 && variants.every((x) => x.stock <= 0) && (
+          <>
+            <p className="text-[14px] font-medium text-danger">Sold out: this piece isn&apos;t in the showroom right now.</p>
+            <NotifyMe product={product.name} />
+          </>
+        )}
         <button type="button" className="btn flex h-[48px] w-full items-center justify-center gap-2" onClick={ask}>
           <IconWhatsApp size={19} /> Enquire on WhatsApp
         </button>

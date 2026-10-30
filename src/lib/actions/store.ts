@@ -1,8 +1,9 @@
 "use client";
 
 import { z } from "zod";
-import { MESSAGES, screen, throttledAdd } from "@/lib/spam";
+import { MESSAGES, recentCount, screen, throttledAdd } from "@/lib/spam";
 import { auth } from "@/lib/firebase";
+import { trackLead } from "@/lib/analytics";
 import {
   applyFilters,
   getCardsByIds,
@@ -129,6 +130,16 @@ const contactSchema = z.object({
 
 /** Showroom visit / video call requests: same inbox as enquiries, plus type and preferred slot. */
 export const APPOINTMENT_KINDS = { visit: "Showroom visit", video: "Video call" } as const;
+/** Every enquiry type shown as a badge in Admin → Enquiries. */
+export const ENQUIRY_KINDS = {
+  ...APPOINTMENT_KINDS,
+  exchange: "Old gold exchange",
+  scheme: "Savings scheme",
+  custom: "Custom design",
+  notify: "Notify when available",
+} as const;
+export type EnquiryKind = keyof typeof ENQUIRY_KINDS;
+const photoSchema = z.string().startsWith("data:image/").max(450_000, "That photo is too large. Please try a smaller one.");
 const appointmentSchema = z.object({
   kind: z.enum(["visit", "video"], { message: "Choose a showroom visit or a video call" }),
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Choose a date"),
@@ -164,13 +175,16 @@ export async function sendContactMessage(
   form: FormData,
 ): Promise<FormState> {
   const fields = Object.fromEntries(form) as Record<string, string>;
-  const booking = form.has("kind") ? appointmentSchema.safeParse(fields) : null;
+  const kind = (fields.kind in ENQUIRY_KINDS ? fields.kind : null) as EnquiryKind | null;
+  const booking = kind === "visit" || kind === "video" ? appointmentSchema.safeParse(fields) : null;
+  const photo = fields.photo ? photoSchema.safeParse(fields.photo) : null;
   if (booking && !fields.message?.trim()) // the note is optional for appointments
     fields.message = `${APPOINTMENT_KINDS[fields.kind as keyof typeof APPOINTMENT_KINDS] ?? "Appointment"} request for ${fields.date}, ${fields.time}.`;
   const parsed = contactSchema.safeParse(fields);
-  if (!parsed.success || (booking && !booking.success)) {
+  if (!parsed.success || (booking && !booking.success) || (photo && !photo.success)) {
     const errors: Record<string, string> = {};
     for (const i of [...(parsed.error?.issues ?? []), ...(booking?.error?.issues ?? [])]) errors[String(i.path[0])] = i.message;
+    if (photo && !photo.success) errors.photo = photo.error.issues[0].message;
     return {
       ok: false,
       message: "Please check the highlighted fields.",
@@ -184,6 +198,8 @@ export async function sendContactMessage(
     ok: true,
     message: b
       ? `Thank you! We've received your ${APPOINTMENT_KINDS[b.kind].toLowerCase()} request for ${when}. We'll call you to confirm.`
+      : kind
+      ? `Thank you! We've received your ${ENQUIRY_KINDS[kind].toLowerCase()} request and will get back to you shortly.`
       : d.product
       ? "Thank you! We've received your enquiry and will get back to you shortly."
       : "Thank you for reaching out. Our team will get back to you shortly.",
@@ -204,7 +220,9 @@ export async function sendContactMessage(
       notes: "",
       createdAt: Date.now(),
       uid: auth().currentUser?.uid ?? "",
-      ...(b ? { kind: b.kind, when } : {}),
+      ...(kind ? { kind } : {}),
+      ...(b ? { when } : {}),
+      ...(photo?.success ? { photo: photo.data } : {}),
     });
     if (!saved) return { ok: false, message: MESSAGES.busy };
   } catch {
@@ -218,7 +236,9 @@ export async function sendContactMessage(
   await web3forms({
     subject: b
       ? `${APPOINTMENT_KINDS[b.kind]} request: ${when} (${d.name})`
-      : d.product
+      : kind
+        ? `${ENQUIRY_KINDS[kind]}: ${d.product || d.name}${photo?.success ? " (photo in admin panel)" : ""}`
+        : d.product
         ? `Product enquiry: ${d.product}`
         : `New website enquiry from ${d.name}`,
     ...(b ? { appointment: `${APPOINTMENT_KINDS[b.kind]}, ${when}` } : {}),
@@ -229,6 +249,7 @@ export async function sendContactMessage(
     ...(d.product ? { product: d.product, page } : {}),
     message: d.message,
   }).catch(() => {});
+  trackLead(kind ?? (d.product ? "product" : "contact"));
   return done;
 }
 
@@ -287,4 +308,31 @@ export async function submitReview(
     return { ok: false, message: "Something went wrong. Please try again." };
   }
   return thanks;
+}
+
+/** "Notify me when it's back" for a sold-out piece: one tap, uses the signed-in visitor's details. */
+export async function requestNotify(product: string): Promise<FormState> {
+  const u = auth().currentUser;
+  if (!u?.email) return { ok: false, message: "Please sign in first." };
+  if (recentCount("enquiries") >= 5) return { ok: false, message: MESSAGES.limit };
+  try {
+    const saved = await throttledAdd("enquiries", {
+      name: (u.displayName || u.email.split("@")[0]).slice(0, 100).padEnd(2, "."),
+      email: u.email,
+      phone: "",
+      message: `Please let me know when ${product} is available again.`.slice(0, 4000),
+      product: product.slice(0, 300),
+      page: window.location.href.slice(0, 500),
+      status: "new",
+      notes: "",
+      createdAt: Date.now(),
+      uid: u.uid,
+      kind: "notify",
+    });
+    if (!saved) return { ok: false, message: MESSAGES.busy };
+  } catch {
+    return { ok: false, message: "Something went wrong. Please try WhatsApp instead." };
+  }
+  trackLead("notify");
+  return { ok: true, message: "Done! We'll let you know as soon as it's back." };
 }

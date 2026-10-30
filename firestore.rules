@@ -89,8 +89,9 @@ service cloud.firestore {
     // Contact-form and product enquiries (also emailed via Web3Forms). Admins may only change status/notes.
     match /enquiries/{id} {
       allow create: if signedIn()
-        && request.resource.data.keys().hasOnly(['name', 'email', 'phone', 'message', 'product', 'page', 'status', 'notes', 'createdAt', 'uid', 'kind', 'when'])
-        && (!('kind' in request.resource.data) || request.resource.data.kind in ['visit', 'video'])
+        && request.resource.data.keys().hasOnly(['name', 'email', 'phone', 'message', 'product', 'page', 'status', 'notes', 'createdAt', 'uid', 'kind', 'when', 'photo'])
+        && (!('kind' in request.resource.data) || request.resource.data.kind in ['visit', 'video', 'exchange', 'scheme', 'custom', 'notify'])
+        && (!('photo' in request.resource.data) || (str(request.resource.data.photo, 450000) && request.resource.data.photo.matches('data:image/.*')))
         && (!('when' in request.resource.data) || str(request.resource.data.when, 60))
         && str(request.resource.data.name, 100) && request.resource.data.name.size() >= 2
         && email(request.resource.data.email)
@@ -106,7 +107,8 @@ service cloud.firestore {
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'notes'])
         && request.resource.data.status in ['new', 'contacted', 'closed']
         && str(request.resource.data.notes, 2000);
-      allow read, delete: if isAdmin();
+      allow read: if isAdmin() || (request.auth != null && resource.data.uid == request.auth.uid); // "My enquiries"
+      allow delete: if isAdmin();
     }
 
     // Each signed-in visitor's own wishlist; nobody else (not even admins) reads it.

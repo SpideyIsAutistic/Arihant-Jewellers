@@ -60,6 +60,8 @@ export function ProductForm({
             <Select label="Gender" name="gender" defaultValue={product?.gender ?? "Women"} options={["Women", "Men", "Unisex", "Kids"].map((m) => ({ value: m, label: m }))} />
             <Field label="Stone" name="stone" defaultValue={product?.stone} />
             <Field label="Approx. weight (g)" name="weightGrams" type="number" step="0.01" defaultValue={product?.weightGrams ?? ""} />
+            <Field label="Making charges (%)" name="makingPct" type="number" step="0.1" defaultValue={product?.makingPct ?? ""} hint="With weight and purity filled in, the price follows today's gold/silver rate. Leave blank to use the selling price above." />
+            <Field label="Diamond / stone value (₹)" name="stoneValue" type="number" step="0.01" defaultValue={paiseToRupees(product?.stoneValue ?? null)} hint="Added before GST. Leave blank for plain gold." />
             <Field label="Dimensions" name="dimensions" defaultValue={product?.dimensions} className="sm:col-span-3" placeholder="e.g. Chain 45 cm + 5 cm extender" />
           </div>
           <TextArea label="Care instructions (optional)" name="careInstructions" defaultValue={product?.careInstructions} rows={3} className="mt-4" hint="Leave blank to show the standard jewellery care guide." />

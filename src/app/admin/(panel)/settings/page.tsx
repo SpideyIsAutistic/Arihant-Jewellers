@@ -45,6 +45,9 @@ export default function SettingsAdmin() {
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label="Instagram URL" name="instagram" defaultValue={s.social.instagram} />
             <Field label="Instagram handle" name="instagramHandle" defaultValue={s.instagramHandle} placeholder="arihantjewellers" />
+            <Field label="Google Analytics measurement ID" name="gaId" defaultValue={s.gaId} placeholder="G-XXXXXXXXXX" hint="analytics.google.com → Admin → Data streams. Enquiries and bookings are sent as leads." />
+            <Field label="Meta Pixel ID" name="metaPixelId" defaultValue={s.metaPixelId} placeholder="123456789012345" hint="For Instagram/Facebook ads: Events Manager → your Pixel." />
+            <Field label="Google Search Console code" name="searchConsoleCode" defaultValue={s.searchConsoleCode} placeholder="abc123…" hint="Search Console → HTML tag: paste only the content=&quot;…&quot; value. Takes effect on the next publish." />
             <Field label="Google Business Profile link" name="googleProfileUrl" defaultValue={s.googleProfileUrl} placeholder="https://maps.app.goo.gl/…" />
             <Field label="Google 'write a review' link" name="googleReviewUrl" defaultValue={s.googleReviewUrl} placeholder="https://g.page/r/…/review" />
             <Field label="Google rating" name="googleRating" defaultValue={s.googleRating} placeholder="4.8" hint="Copy from your Google profile now and then; leave blank to hide the rating." />
@@ -69,6 +72,7 @@ export default function SettingsAdmin() {
             <Field label="Story title" name="aboutTitle" defaultValue={s.aboutTitle} />
             <TextArea label="Short story (home page & top of About page)" name="aboutText" defaultValue={s.aboutText} rows={3} />
             <TextArea label="About page body" name="aboutPage" defaultValue={s.aboutPage} rows={10} hint="Formatting: '## ' for headings, '- ' for bullet points, blank line between paragraphs." />
+            <TextArea label="Gold savings scheme details" name="schemeDetails" defaultValue={s.schemeDetails} rows={8} hint="Shown on the Gold Savings Scheme page: monthly amount, duration, what the customer gets, rules. Leave blank and the page asks customers to enquire." />
           </div>
         </Card>
 

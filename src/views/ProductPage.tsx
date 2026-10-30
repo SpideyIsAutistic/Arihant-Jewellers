@@ -86,6 +86,8 @@ function Product({ data, settings }: { data: ProductData; settings: SettingsData
       metal: product.metal,
       purity: product.purity,
       weightGrams: product.weightGrams,
+      makingPct: product.makingPct,
+      stoneValue: product.stoneValue,
       name: product.name,
     },
     card.price,

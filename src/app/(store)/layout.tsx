@@ -4,6 +4,7 @@ import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
+import { Analytics } from "@/components/layout/Analytics";
 import { StoreOverlays } from "@/components/layout/StoreOverlays";
 import { DEFAULT_SETTINGS, getSettings } from "@/lib/settings";
 import { DEFAULT_METAL_RATES, getMetalRates } from "@/lib/gold-rates";
@@ -31,6 +32,7 @@ export default function StoreLayout({ children }: { children: React.ReactNode })
       <Footer settings={settings} />
       <StoreOverlays />
       <WhatsAppFloat />
+      <Analytics s={settings} />
     </>
   );
 }

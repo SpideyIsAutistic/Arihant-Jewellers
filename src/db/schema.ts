@@ -94,6 +94,10 @@ export type Product = {
   gender: string;
   stone: string | null;
   weightGrams: number | null;
+  /** Making charges as % of metal value. With weightGrams set, the price follows the saved gold/silver rate. */
+  makingPct?: number | null;
+  /** Diamonds/gemstones value in paise, added to the metal + making (before GST). */
+  stoneValue?: number | null;
   dimensions: string | null;
   /** 0 = "Price on request" */
   price: number;

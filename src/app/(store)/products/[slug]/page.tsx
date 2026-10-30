@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import ProductPage from "@/views/ProductPage";
 import { getAllProductSlugs, getServerProductBySlug, getServerSettings } from "@/lib/server-catalog";
 import { absoluteUrl } from "@/lib/utils";
+import { metaDescription } from "@/lib/seo";
 
 export const dynamicParams = false;
 
@@ -29,10 +30,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const { product } = data;
   const title = product.seoTitle || product.name;
-  const description =
-    product.seoDescription ||
-    product.description ||
-    `Explore ${product.name} crafted in ${[product.metal, product.purity].filter(Boolean).join(" ")} from Arihant Jewellers, Thane.`;
+  const description = metaDescription(
+    product.seoDescription || product.description || "",
+    `${product.name} at Arihant Jewellers, Thane. Enquire on WhatsApp for today's price.`,
+  );
   const url = absoluteUrl(`/products/${product.slug}`);
   const images = product.images.map((img) => (img.url.startsWith("http") ? img.url : absoluteUrl(img.url)));
   // JPG share card from scripts/og-images.py (WhatsApp previews don't reliably show WebP); new products fall back to their photo

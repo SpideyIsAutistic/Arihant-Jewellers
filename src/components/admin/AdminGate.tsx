@@ -1,7 +1,17 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { onAuthStateChanged, RecaptchaVerifier, signInWithPhoneNumber, signInWithPopup, signOut, type ConfirmationResult, type User } from "firebase/auth";
+import {
+  getRedirectResult,
+  onAuthStateChanged,
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
+  signInWithPopup,
+  signInWithRedirect,
+  signOut,
+  type ConfirmationResult,
+  type User,
+} from "firebase/auth";
 import { collection, getDocs, limit, query } from "firebase/firestore";
 import { auth, db, googleProvider } from "@/lib/firebase";
 import { toE164 } from "@/lib/utils";
@@ -15,26 +25,65 @@ type State = { status: "loading" } | { status: "out"; error?: string } | { statu
 export function AdminGate({ children }: { children: (user: User) => React.ReactNode }) {
   const [s, setS] = useState<State>({ status: "loading" });
 
-  useEffect(
-    () =>
-      onAuthStateChanged(auth(), async (user) => {
-        if (!user) return setS({ status: "out" });
+  useEffect(() => {
+    // Process redirect result if coming back from redirect sign-in
+    getRedirectResult(auth()).catch((e) => {
+      console.error("Redirect sign-in error:", e);
+      const code = e?.code || "";
+      if (code === "auth/unauthorized-domain") {
+        setS({
+          status: "out",
+          error: `Domain not authorized in Firebase: "${window.location.hostname}". Please add this domain to Firebase Console → Authentication → Settings → Authorized domains.`,
+        });
+      } else if (code && code !== "auth/popup-closed-by-user") {
+        setS({ status: "out", error: e?.message || "Sign-in failed. Please try again." });
+      }
+    });
+
+    return onAuthStateChanged(auth(), async (user) => {
+      if (!user) return setS({ status: "out" });
+      try {
+        // Listing admins/ is allowed only for admins (firestore.rules), so this mirrors the real check.
+        await getDocs(query(collection(db(), "admins"), limit(1)));
+        setS({ status: "in", user });
+      } catch {
+        setS({ status: "denied", user });
+      }
+    });
+  }, []);
+
+  const handleGoogleSignIn = async () => {
+    try {
+      await signInWithPopup(auth(), googleProvider());
+    } catch (e: any) {
+      console.error("Google sign-in error:", e);
+      const code = e?.code || "";
+      if (code === "auth/popup-closed-by-user" || code === "auth/cancelled-popup-request") {
+        return;
+      }
+      if (code === "auth/unauthorized-domain") {
+        setS({
+          status: "out",
+          error: `Domain not authorized in Firebase: "${window.location.hostname}". Please add "${window.location.hostname}" to Firebase Console → Authentication → Settings → Authorized domains.`,
+        });
+      } else if (code === "auth/popup-blocked") {
+        // Automatically try redirect if popup is blocked
         try {
-          // Listing admins/ is allowed only for admins (firestore.rules), so this mirrors the real check.
-          await getDocs(query(collection(db(), "admins"), limit(1)));
-          setS({ status: "in", user });
-        } catch {
-          setS({ status: "denied", user });
+          await signInWithRedirect(auth(), googleProvider());
+        } catch (err: any) {
+          setS({ status: "out", error: `Popup was blocked and redirect failed: ${err?.message || err?.code}` });
         }
-      }),
-    [],
-  );
+      } else {
+        setS({ status: "out", error: e?.message || "Sign-in failed. Please try again." });
+      }
+    }
+  };
 
   if (s.status === "in") return <>{children(s.user)}</>;
 
   return (
     <div className="grid min-h-screen place-items-center bg-cream px-5">
-      <div className="w-full max-w-[400px] bg-white p-8 text-center shadow-sm">
+      <div className="w-full max-w-[420px] bg-white p-8 text-center shadow-sm">
         <div className="mb-2 font-serif text-[28px] tracking-[0.14em]">ARIHANT</div>
         <h1 className="mb-8 text-[13px] tracking-[0.2em] text-subtle uppercase">Store admin</h1>
         {s.status === "loading" && <p className="text-[14px] text-subtle">Checking your sign-in…</p>}
@@ -43,15 +92,15 @@ export function AdminGate({ children }: { children: (user: User) => React.ReactN
             <button
               type="button"
               className="btn flex w-full items-center justify-center gap-3"
-              onClick={() =>
-                signInWithPopup(auth(), googleProvider()).catch((e) =>
-                  setS({ status: "out", error: e?.code === "auth/popup-closed-by-user" ? undefined : "Sign-in failed. Please try again." }),
-                )
-              }
+              onClick={handleGoogleSignIn}
             >
               <GoogleMark /> Sign in with Google
             </button>
-            {s.error && <p className="mt-3 text-[14px] text-danger">{s.error}</p>}
+            {s.error && (
+              <div className="mt-3 p-3 bg-red-50 border border-red-200 text-left rounded text-[13px] text-danger leading-relaxed">
+                {s.error}
+              </div>
+            )}
             <PhoneSignIn />
             <p className="mt-5 text-[12px] text-subtle">Only approved Google accounts and phone numbers can access the admin panel.</p>
           </>
@@ -77,8 +126,11 @@ const PHONE_ERRORS: Record<string, string> = {
   "auth/invalid-verification-code": "That code isn't right. Check the SMS and try again.",
   "auth/code-expired": "That code has expired. Send a new one.",
   "auth/too-many-requests": "Too many attempts. Please wait a while and try again.",
-  "auth/operation-not-allowed": "Phone sign-in isn't switched on for this store yet. Use Google for now.",
+  "auth/operation-not-allowed": "Phone sign-in isn't enabled in Firebase Console → Authentication → Sign-in method.",
   "auth/billing-not-enabled": "Phone sign-in needs the Firebase Blaze plan, which isn't on yet. Use Google for now.",
+  "auth/unauthorized-domain": "This domain is not authorized in Firebase. Add it in Firebase Console → Authentication → Settings → Authorized domains.",
+  "auth/captcha-check-failed": "reCAPTCHA verification failed. Please try again.",
+  "auth/quota-exceeded": "SMS quota exceeded for today. Please try again tomorrow or use Google.",
 };
 
 /** Mobile number + SMS code (Firebase phone auth, with an invisible reCAPTCHA against abuse). */
@@ -97,8 +149,16 @@ function PhoneSignIn() {
     try {
       await fn();
     } catch (e) {
-      const c = (e as { code?: string }).code ?? "";
-      setError(PHONE_ERRORS[c] ?? "Couldn't sign in with that number. Please try again.");
+      console.error("Phone sign-in error:", e);
+      const c = (e as { code?: string; message?: string }).code ?? "";
+      const msg = (e as { message?: string }).message ?? "";
+      if (c === "auth/unauthorized-domain") {
+        setError(
+          `Domain not authorized in Firebase: "${window.location.hostname}". Please add this domain to Firebase Console → Authentication → Settings → Authorized domains.`,
+        );
+      } else {
+        setError(PHONE_ERRORS[c] ?? (msg ? `${msg} (${c})` : "Couldn't sign in with that number. Please try again."));
+      }
       if (c !== "auth/invalid-verification-code") {
         verifier.current?.clear(); // a used or failed reCAPTCHA can't be reused
         verifier.current = null;

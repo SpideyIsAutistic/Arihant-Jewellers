@@ -5,7 +5,7 @@ import type { MetalRates } from "./gold-rates";
 import { DEFAULT_METAL_RATES } from "./gold-rates";
 import { DEFAULT_SETTINGS, type StoreSettings } from "./settings";
 import { isOfferLive, matchesCollection, priceProduct } from "./pricing";
-import { splitList } from "./utils";
+import { isTemplateCopy, splitList } from "./utils";
 import type { ProductCard, Listing } from "./catalog";
 
 export type ServerSiteData = {
@@ -47,7 +47,7 @@ function withRewrittenCopy(products: Product[], root: string): Product[] {
     const byId = new Map(seed.map((p) => [p.id, p]));
     return products.map((p) => {
       const s = byId.get(p.id);
-      return s && p.description?.startsWith(`${p.name} from the Arihant Jewellers collection`)
+      return s && isTemplateCopy(p)
         ? { ...p, description: s.description, seoDescription: p.seoDescription || s.seoDescription }
         : p;
     });

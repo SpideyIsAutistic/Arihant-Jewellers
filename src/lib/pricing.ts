@@ -1,6 +1,6 @@
 import type { Collection, Offer } from "@/db/schema";
 import { splitList } from "./utils";
-import { getMetalPriceAdjustment, type MetalRates } from "./gold-rates";
+import { getMetalPriceAdjustment, rateBasedPrice, type MetalRates } from "./gold-rates";
 
 export type PricedInput = {
   id: string;
@@ -11,6 +11,8 @@ export type PricedInput = {
   tags: string;
   purity?: string | null;
   weightGrams?: number | null;
+  makingPct?: number | null;
+  stoneValue?: number | null;
   name?: string;
 };
 
@@ -72,8 +74,9 @@ export function priceProduct(
   priceDelta = 0,
   metalRates?: MetalRates,
 ): PriceInfo {
-  const metalAdjustment = metalRates ? getMetalPriceAdjustment(p, metalRates) : 0;
-  const base = Math.max(0, p.price + priceDelta + metalAdjustment);
+  const formula = metalRates ? rateBasedPrice(p, metalRates) : null;
+  const metalAdjustment = metalRates && p.price > 0 ? getMetalPriceAdjustment(p, metalRates) : 0;
+  const base = formula ? formula.total + priceDelta : Math.max(0, p.price + priceDelta + metalAdjustment);
   let best = 0;
   let bestName: string | null = null;
   for (const o of offers) {

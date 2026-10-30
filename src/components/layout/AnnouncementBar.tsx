@@ -40,7 +40,7 @@ export function AnnouncementBar({
         {/* Center: Rotating Announcement Messages with smooth cross-fade */}
         {count > 0 && (
           <div
-            className="mx-auto flex max-w-[480px] items-center justify-center gap-2 px-2 md:absolute md:left-1/2 md:-translate-x-1/2"
+            className="mx-auto flex min-w-0 flex-1 max-w-[480px] items-center justify-center gap-2 px-2 md:absolute md:left-1/2 md:-translate-x-1/2 md:flex-none"
             onMouseEnter={() => setPaused(true)}
             onMouseLeave={() => setPaused(false)}
           >

@@ -302,3 +302,10 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* Never let one wide element make the whole page scroll sideways on phones.
+   clip (not hidden) keeps the sticky header working. */
+html,
+body {
+  overflow-x: clip;
+}

@@ -28,8 +28,11 @@ export function Slideshow({
   priority?: boolean;
   variant?: "hero" | "promo";
 }) {
-  const [index, setIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
+  // pos: current slide; prev/dir drive the slide-in/slide-out animation
+  const [{ index, prev, dir }, setPos] = useState({ index: 0, prev: -1, dir: 1 });
+  const go = (n: number, d: number) => setPos((p) => (n === p.index ? p : { index: n, prev: p.index, dir: d }));
+  const next = () => setPos((p) => ({ index: (p.index + 1) % slides.length, prev: p.index, dir: 1 }));
+  const back = () => setPos((p) => ({ index: (p.index - 1 + slides.length) % slides.length, prev: p.index, dir: -1 }));
   // Only load a slide's images once it's current or next, so the page doesn't download every slide up front.
   const [seen, setSeen] = useState(() => new Set([0, 1]));
   useEffect(() => {
@@ -37,14 +40,13 @@ export function Slideshow({
   }, [index, slides.length]);
   const touchStartX = useRef<number | null>(null);
 
-  // Autoplay with pause on hover
+  // Autoplay; restarts the timer after every change so a manual swipe/click gets a full interval
   useEffect(() => {
-    if (slides.length <= 1 || paused) return;
-    const interval = setInterval(() => {
-      setIndex((i) => (i + 1) % slides.length);
-    }, 6500);
-    return () => clearInterval(interval);
-  }, [slides.length, paused]);
+    if (slides.length <= 1) return;
+    const t = setTimeout(next, 5500);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [index, slides.length]);
 
   if (!slides.length) return null;
 
@@ -56,11 +58,8 @@ export function Slideshow({
     if (touchStartX.current === null) return;
     const diff = touchStartX.current - e.changedTouches[0].clientX;
     if (Math.abs(diff) > 40) {
-      if (diff > 0) {
-        setIndex((i) => (i + 1) % slides.length);
-      } else {
-        setIndex((i) => (i - 1 + slides.length) % slides.length);
-      }
+      if (diff > 0) next();
+      else back();
     }
     touchStartX.current = null;
   };
@@ -74,21 +73,22 @@ export function Slideshow({
       role="region"
       aria-roledescription="carousel"
       aria-label="Hero Highlights"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      {/* Slides layered on top of each other with smooth cross-fade */}
+      {/* Slides: the current one sits at 0; the previous slides out, the rest wait off-screen on the side the next one enters from */}
       {slides.map((s, i) => {
         const isActive = i === index;
+        const x = isActive ? 0 : i === prev ? -100 * dir : 100 * dir;
         return (
           <div
             key={s.id}
             className={cn(
-              "absolute inset-0 h-full w-full transition-opacity duration-1000 ease-in-out",
-              isActive ? "opacity-100 z-10 pointer-events-auto" : "opacity-0 z-0 pointer-events-none",
+              "absolute inset-0 h-full w-full ease-[cubic-bezier(.65,0,.35,1)]",
+              (isActive || i === prev) && "transition-transform duration-[900ms]",
+              isActive ? "z-10" : "z-0 pointer-events-none",
             )}
+            style={{ transform: `translateX(${x}%)` }}
             role="group"
             aria-roledescription="slide"
             aria-label={`${i + 1} of ${slides.length}`}
@@ -109,7 +109,7 @@ export function Slideshow({
               type="button"
               aria-label={`Go to slide ${i + 1}`}
               aria-current={i === index}
-              onClick={() => setIndex(i)}
+              onClick={() => go(i, i > index ? 1 : -1)}
               className={cn(
                 "h-[2.5px] transition-all duration-500 rounded-full cursor-pointer",
                 i === index ? "w-10 bg-[#e6ca85] shadow-xs" : "w-4 bg-white/40 hover:bg-white/80",

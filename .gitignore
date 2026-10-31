@@ -23,3 +23,7 @@ scripts/mac-shell-mcp.py
 # logs & OS files
 *.log
 .DS_Store
+.netlify/
+.agents/
+skills-lock.json
+

@@ -4,7 +4,7 @@ import type { StoreSettings } from "@/lib/settings";
 import { NewsletterForm } from "./NewsletterForm";
 import { FooterSearches } from "./FooterSearches";
 import { GoogleRating } from "@/components/ui/GoogleRating";
-import { IconFacebook, IconInstagram, IconPinterest, IconX, IconYouTube } from "@/components/ui/Icons";
+import { IconInstagram, IconPinterest, IconYouTube } from "@/components/ui/Icons";
 
 function Col({ title, links }: { title: string; links: { label: string; href: string }[] }) {
   return (
@@ -27,9 +27,7 @@ export function Footer({ settings }: { settings: StoreSettings }) {
   const s = settings;
   const socials = [
     { href: s.social.instagram, label: "Instagram", Icon: IconInstagram },
-    { href: s.social.facebook, label: "Facebook", Icon: IconFacebook },
     { href: s.social.youtube, label: "YouTube", Icon: IconYouTube },
-    { href: s.social.x, label: "X", Icon: IconX },
     { href: s.social.pinterest, label: "Pinterest", Icon: IconPinterest },
   ].filter((x) => x.href);
   const year = new Date().getFullYear();

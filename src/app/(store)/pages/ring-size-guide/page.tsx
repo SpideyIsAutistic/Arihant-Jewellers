@@ -36,7 +36,7 @@ export default function RingSizeGuide() {
       <h1 className="h-section">Ring Size Guide</h1>
       <p className="mt-3 text-center text-[15px] text-body2">
         Measure at home in two minutes, then send us the number in millimetres, or{" "}
-        <Link href="/pages/book-appointment" className="underline">visit the showroom</Link> and we&apos;ll size your finger for free.
+        <Link href="/pages/contact" className="underline">enquire on WhatsApp</Link> and we&apos;ll size your finger for free.
       </p>
       <div className="mt-10 space-y-6 text-[15px] leading-relaxed text-body2">
         {FAQS.map((f) => (

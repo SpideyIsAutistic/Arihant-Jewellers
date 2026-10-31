@@ -183,7 +183,7 @@ export function getAllCollectionSlugs(): string[] {
   const site = getServerSiteData();
   const catSlugs = site.categories.filter((c) => c.isActive).map((c) => c.slug);
   const colSlugs = site.collections.filter((c) => c.isActive).map((c) => c.slug);
-  return ["all", ...new Set([...catSlugs, ...colSlugs])];
+  return ["all", "catalogue", ...new Set([...catSlugs, ...colSlugs])];
 }
 
 function rank(list: string[], id: string) {
@@ -193,11 +193,11 @@ function rank(list: string[], id: string) {
 
 export function getServerListing(slug: string): Listing | null {
   const { cards, categories, collections } = getServerCatalog();
-  if (slug === "all") {
+  if (slug === "all" || slug === "catalogue") {
     return {
       kind: "all",
       slug,
-      title: "All Jewellery",
+      title: "All Jewellery Catalogue",
       description:
         "Explore every piece in the Arihant Jewellers collection — gold, diamond, gemstone and silver jewellery for everyday wear, gifting and celebrations.",
       heroImage: null,

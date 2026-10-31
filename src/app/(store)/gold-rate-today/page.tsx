@@ -51,7 +51,7 @@ export default function GoldRatePage() {
         <p>
           Looking for a piece? Browse our <Link href="/collections/gold-jewellery" className="underline">gold jewellery</Link>,{" "}
           <Link href="/collections/mangalsutra" className="underline">mangalsutras</Link> and <Link href="/collections/chains" className="underline">gold chains</Link>, or{" "}
-          <Link href="/pages/book-appointment" className="underline">book a showroom visit</Link>.
+          <Link href="/pages/contact" className="underline">enquire on WhatsApp</Link>.
         </p>
       </div>
       <JsonLd data={faqJsonLd(FAQS)} />

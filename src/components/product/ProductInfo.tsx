@@ -3,7 +3,7 @@
 import Link from "next/link";
 
 import { useEffect, useRef, useState } from "react";
-import { IconFacebook, IconLink, IconMail, IconWhatsApp, IconX, trustIcon } from "@/components/ui/Icons";
+import { IconLink, IconMail, IconWhatsApp, trustIcon } from "@/components/ui/Icons";
 import { formatPrice } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { WishlistButton } from "./WishlistButton";
@@ -137,9 +137,9 @@ export function ProductInfo({ product, variants, trustBadges, shareUrl, metalBre
         </button>
         <p className="text-[12px] leading-relaxed text-subtle">
           Ask about price, availability, sizing or customisation — we usually reply within a few hours. Or{" "}
-          <Link href={`/pages/book-appointment?product=${encodeURIComponent(product.name)}`} className="text-ink underline underline-offset-2">
-            book a showroom visit or video call
-          </Link>
+          <button type="button" onClick={() => enquire(product)} className="text-ink underline underline-offset-2 hover:opacity-80">
+            enquire directly on WhatsApp
+          </button>
           {product.isRing && (
             <>
               {" "}· <Link href="/pages/ring-size-guide" className="text-ink underline underline-offset-2">find your ring size</Link>
@@ -158,12 +158,6 @@ export function ProductInfo({ product, variants, trustBadges, shareUrl, metalBre
         <span className="text-[11px] font-medium tracking-[0.2em] uppercase text-subtle">Share</span>
         <a href={`https://wa.me/?text=${encodeURIComponent(`${product.name} ${shareUrl}`)}`} target="_blank" rel="noopener noreferrer" aria-label="Share on WhatsApp" className="text-subtle hover:text-ink transition-colors">
           <IconWhatsApp size={20} />
-        </a>
-        <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`} target="_blank" rel="noopener noreferrer" aria-label="Share on Facebook" className="text-subtle hover:text-ink transition-colors">
-          <IconFacebook size={20} />
-        </a>
-        <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(product.name)}`} target="_blank" rel="noopener noreferrer" aria-label="Share on X" className="text-subtle hover:text-ink transition-colors">
-          <IconX size={18} />
         </a>
         <CopyLink url={shareUrl} />
       </div>

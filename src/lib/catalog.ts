@@ -128,13 +128,13 @@ export type Listing = {
 
 export async function resolveListing(slug: string): Promise<Listing | null> {
   const { cards, categories, collections } = await getCatalog();
-  if (slug === "all") {
+  if (slug === "all" || slug === "catalogue") {
     return {
       kind: "all",
       slug,
-      title: "All Jewellery",
+      title: "All Jewellery Catalogue",
       description:
-        "Explore every piece in the Arihant Jewellers collection — sterling silver, gold and pearl jewellery for everyday wear, gifting and celebrations.",
+        "Explore every piece in the Arihant Jewellers collection — gold, diamond, gemstone and silver jewellery for everyday wear, gifting and celebrations.",
       heroImage: null,
       items: cards,
     };

@@ -14,8 +14,8 @@ type Props = {
 };
 
 const DESCRIPTIONS: Record<PolicySlug, string> = {
-  "privacy-policy": "What Arihant Jewellers, Thane collects when you sign in, enquire, book a visit or save a wishlist, and how we use and protect it.",
-  "terms-of-service": "Terms for using the Arihant Jewellers website: catalogue photos, indicative prices, enquiries, showroom appointments and offers.",
+  "privacy-policy": "What Arihant Jewellers, Thane collects when you sign in, enquire or save a wishlist, and how we use and protect it.",
+  "terms-of-service": "Terms for using the Arihant Jewellers website: catalogue photos, indicative prices, enquiries and offers.",
   "shipping-policy": "Online ordering and shipping are paused at Arihant Jewellers. Buy at our Thane showroom or with our team after an enquiry.",
   "refund-policy": "Returns and exchanges for jewellery bought at the Arihant Jewellers showroom in Thane are explained at purchase and on your invoice.",
 };

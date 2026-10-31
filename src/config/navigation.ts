@@ -100,7 +100,7 @@ export const FOOTER_NAV = {
     { label: "Our Showroom", href: "/pages/store" },
     { label: "FAQs", href: "/pages/faq" },
     { label: "Dhanteras & Diwali", href: "/festive/dhanteras-diwali" },
-    { label: "Book a Visit", href: "/pages/book-appointment" },
+    { label: "WhatsApp Enquiry", href: "/pages/contact" },
     { label: "Old Gold Exchange", href: "/gold-exchange" },
     { label: "Gold Savings Scheme", href: "/pages/gold-savings-scheme" },
     { label: "Custom Design", href: "/pages/custom-design" },

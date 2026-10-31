@@ -39,7 +39,7 @@ export default function MyEnquiries() {
       {user && !rows && !failed && <p className="mt-8 text-center text-subtle">Loading…</p>}
       {rows?.length === 0 && (
         <p className="mt-8 text-center text-body2">
-          Nothing yet. Enquire about a piece or <Link href="/pages/book-appointment" className="underline">book a visit</Link>.
+          Nothing yet. Enquire about a piece or <Link href="/pages/contact" className="underline">send a WhatsApp enquiry</Link>.
         </p>
       )}
       {rows && rows.length > 0 && (

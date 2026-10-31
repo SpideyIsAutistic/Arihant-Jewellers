@@ -67,7 +67,7 @@ export default async function GuidePage({ params }: Props) {
       </section>
       <p className="mt-12 border-t border-line pt-6 text-[15px] text-body2">
         Want to see stones in person?{" "}
-        <Link href={`/pages/book-appointment?product=${encodeURIComponent(g.name)}`} className="underline">Book a showroom visit or video call</Link>, or browse all{" "}
+        <Link href="/pages/contact" className="underline">Enquire on WhatsApp</Link>, or browse all{" "}
         <Link href="/collections/gemstones" className="underline">gemstones</Link>.
       </p>
       <JsonLd

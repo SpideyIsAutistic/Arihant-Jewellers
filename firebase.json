@@ -7,6 +7,23 @@
       "firebase.json",
       "**/.*"
     ],
+    "redirects": [
+      {
+        "source": "/collection/catalogue",
+        "destination": "/collections/catalogue",
+        "type": 301
+      },
+      {
+        "source": "/collection/**",
+        "destination": "/collections/:splat",
+        "type": 301
+      },
+      {
+        "source": "/catalogue",
+        "destination": "/collections/catalogue",
+        "type": 301
+      }
+    ],
     "rewrites": [
       {
         "source": "/products/*.txt",

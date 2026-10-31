@@ -9,6 +9,7 @@ import { TabbedProducts } from "@/components/home/TabbedProducts";
 import { TileRow } from "@/components/home/Tiles";
 import { TrustBar } from "@/components/home/TrustBar";
 import { PromoPopup, withPromoSlides } from "@/components/home/Promos";
+import { CategorySliderMenu } from "@/components/home/CategorySliderMenu";
 import { CategoryMosaic } from "@/components/home/CategoryMosaic";
 import { ShopTheLook, type LookSpot } from "@/components/home/ShopTheLook";
 import { Testimonials } from "@/components/home/Testimonials";
@@ -99,6 +100,7 @@ function Home({ data }: { data: HomeData }) {
       <h1 className="sr-only">Arihant Jewellers — gold, diamond and gemstone jewellery in Thane</h1>
       {/* shortcut: Dhanteras slide drops out by date only after a rebuild/live load; fine while Netlify rebuilds on every push */}
       <Slideshow slides={withPromoSlides(banners.hero.map(toSlide), Date.now())} priority />
+      <CategorySliderMenu />
       <PromoPopup />
 
       <Section title="Explore Our Bestsellers" id="bestsellers-title">

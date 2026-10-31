@@ -39,19 +39,19 @@ export default function DhanterasPage() {
       <p className="text-center text-[12px] tracking-[0.2em] text-subtle uppercase">Dhanteras · Friday 6 November 2026</p>
       <h1 className="h-section mt-2">Dhanteras &amp; Diwali at Arihant</h1>
       <p className="mt-4 text-center text-[16px] text-body2">
-        Gold, silver idols for the home temple, and festive jewellery for the family, at our showroom on Ghodbunder Road, Thane West. Book a time so we
-        have your pieces ready, especially on the busy Dhanteras weekend.
+        Gold, silver idols for the home temple, and festive jewellery for the family, at our showroom on Ghodbunder Road, Thane West. Connect with us on WhatsApp
+        so we have your pieces ready, especially on the busy Dhanteras weekend.
       </p>
       <p className="mt-3 text-center text-[14px]">
         <Link href="/hi/dhanteras" hrefLang="hi" className="underline">हिंदी में पढ़ें</Link> ·{" "}
         <Link href="/mr/dhanteras" hrefLang="mr" className="underline">मराठीत वाचा</Link>
       </p>
       <div className="mt-8 flex flex-wrap justify-center gap-3">
-        <Link href="/pages/book-appointment?product=Dhanteras%20visit" className="btn">
-          Book a Dhanteras visit
+        <Link href="/pages/contact" className="btn">
+          WhatsApp Enquiry
         </Link>
-        <Link href="/collections/festive" className="btn-outline">
-          See festive jewellery
+        <Link href="/collections/catalogue" className="btn-outline">
+          Explore the collection
         </Link>
       </div>
       {picks.length > 0 && (

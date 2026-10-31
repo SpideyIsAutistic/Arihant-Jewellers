@@ -21,7 +21,16 @@ const DHANTERAS_END = new Date("2026-11-07T00:00:00+05:30").getTime();
 
 /** Designed hero slides for the services, shown alongside the admin's hero banners. */
 export const PROMO_SLIDES = {
-  dhanteras: slide("promo-dhanteras", "dhanteras", "Dhanteras & Diwali", "Festive picks, silver idols and today's gold rate. Dhanteras is Friday 6 November.", "Book a Dhanteras visit", "/festive/dhanteras-diwali"),
+  dhanteras: {
+    id: "promo-dhanteras",
+    title: null,
+    subtitle: null,
+    ctaLabel: null,
+    href: "/collections/catalogue",
+    image: "/promo/dhanteras-hero.webp",
+    mobileImage: "/promo/dhanteras-hero-m.webp",
+    align: "left" as const,
+  },
   rest: [
     slide("promo-rate", "gold-rate", "Priced at Today's Gold Rate", "Weight × today's rate + making + stones + GST, shown in full on every piece.", "See today's rate", "/gold-rate-today"),
     slide("promo-exchange", "gold-exchange", "What Is Your Old Gold Worth?", "Estimate it at today's rate and get a quote for exchange.", "Estimate value", "/gold-exchange"),
@@ -67,13 +76,13 @@ export function PromoPopup() {
     } catch {}
     const start = Date.now();
     const t = setInterval(() => {
-      if (Date.now() - start < 5000 || document.querySelector('[role="dialog"]')) return;
+      if (Date.now() - start < 2000 || document.querySelector('[role="dialog"]')) return;
       clearInterval(t);
       setPromo(POPUPS.find((p) => Date.now() < p.until) ?? null);
       try {
         sessionStorage.setItem(SEEN, "1");
       } catch {}
-    }, 1000);
+    }, 500);
     return () => clearInterval(t);
   }, []);
 
@@ -86,6 +95,54 @@ export function PromoPopup() {
 
   if (!promo) return null;
   const close = () => setPromo(null);
+
+  if (promo.art === "dhanteras") {
+    return (
+      <div className="fixed inset-0 z-[70] flex items-center justify-center p-3 sm:p-5">
+        <div aria-hidden className="absolute inset-0 animate-fade-in bg-black/80 backdrop-blur-xs" onClick={close} />
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Arihant Jewellers Dhanteras - Bring Home Prosperity"
+          className="relative w-full max-w-[min(100%,calc(82vh*776/1276))] animate-fade-in-up overflow-hidden rounded-[16px] sm:max-w-[760px] border border-[#c5a366]/60 shadow-[0_16px_50px_rgba(0,0,0,0.7)]"
+        >
+          {/* Close button */}
+          <button
+            type="button"
+            aria-label="Close"
+            onClick={close}
+            className="absolute top-3.5 right-3.5 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-black/70 text-[#f5d58d] hover:bg-black hover:text-white transition-all border border-[#c5a366]/40 cursor-pointer shadow-md"
+          >
+            <IconClose size={18} />
+          </button>
+
+          {/* Interactive banner link to /collections/catalogue */}
+          <Link href="/collections/catalogue" onClick={close} className="group block focus:outline-none">
+            {/* Desktop popup image */}
+            <div className="hidden sm:block aspect-[1692/1016] w-full bg-black relative">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/promo/dhanteras-popup-desktop.webp"
+                alt="Arihant Jewellers Dhanteras - Bring Home Prosperity - Explore Collection"
+                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.015]"
+              />
+            </div>
+
+            {/* Mobile popup image */}
+            <div className="block sm:hidden aspect-[776/1276] w-full bg-black relative">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/promo/dhanteras-popup-mobile.webp"
+                alt="Arihant Jewellers Dhanteras - Bring Home Prosperity - Explore Collection"
+                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.015]"
+              />
+            </div>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="fixed inset-0 z-[70] flex items-center justify-center p-4">
       <div aria-hidden className="absolute inset-0 animate-fade-in bg-black/60" onClick={close} />

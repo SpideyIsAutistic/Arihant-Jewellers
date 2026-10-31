@@ -3,6 +3,21 @@
   publish = "out"
 
 [[redirects]]
+  from = "/collection/catalogue"
+  to = "/collections/catalogue"
+  status = 301
+
+[[redirects]]
+  from = "/collection/*"
+  to = "/collections/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/catalogue"
+  to = "/collections/catalogue"
+  status = 301
+
+[[redirects]]
   from = "/products/*.txt"
   to = "/products/_.txt"
   status = 200

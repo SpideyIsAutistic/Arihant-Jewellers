@@ -28,7 +28,7 @@ Because online ordering is paused, all purchases are made at our showroom or wit
 For anything about a piece you have bought, contact us at {contact} with your invoice number.`,
   "privacy-policy": `## What we collect
 - **Signing in:** if you sign in with Google or with a link emailed to you, we receive your name (Google only), email address and an account ID.
-- **Enquiries and appointments:** the details you enter: usually your name, email, phone number, message, and for appointments the date and time you prefer.
+- **Enquiries:** the details you enter: usually your name, email, phone number and message.
 - **Wishlist:** when you are signed in, the pieces you save are stored with your account so you can see them on any device.
 - **Newsletter:** your email address, if you subscribe.
 - **Reviews:** your name, email and review. Only your name and review are published, after we approve them.
@@ -37,7 +37,7 @@ For anything about a piece you have bought, contact us at {contact} with your in
 Only to answer your enquiry, arrange your visit or video call, help you choose a piece and, if you subscribe, send you news about new arrivals and offers. You can unsubscribe at any time.
 
 ## Where it is kept
-Your details are stored in our website database (Google Firebase), which only our staff can open. Enquiries and appointment requests are also emailed to our store inbox through our form provider (Web3Forms). We do not sell your personal information or share it with anyone else.
+Your details are stored in our website database (Google Firebase), which only our staff can open. Enquiries are also emailed to our store inbox through our form provider (Web3Forms). We do not sell your personal information or share it with anyone else.
 
 ## Storage on your device
 Your browser remembers your sign-in, wishlist and recently viewed items. Signing out clears your wishlist from that browser.
@@ -57,7 +57,7 @@ This website is operated by {legalName} to showcase our jewellery collection. By
 The website is a catalogue. Prices, where shown, are indicative and inclusive of applicable taxes; gold prices change with the daily metal rate. Final price, availability and weight are confirmed by our team when you enquire or visit the showroom. Jewellery is handcrafted and screens differ, so slight variations in colour, size and finish may occur. Weights shown are approximate.
 
 ## Enquiries & purchases
-Online ordering and shipping are currently paused. Purchases are completed at our showroom or directly with our team after an enquiry. Appointment requests are confirmed by our team; a booking is not confirmed until we reply.
+Online ordering and shipping are currently paused. Purchases are completed at our showroom or directly with our team after an enquiry.
 
 ## Offers
 Offers are valid for the stated period, cannot be exchanged for cash and, unless stated otherwise, cannot be combined.

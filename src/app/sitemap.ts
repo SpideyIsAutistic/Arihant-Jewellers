@@ -50,7 +50,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly" as const,
       priority: 0.7,
     })),
-    { url: absoluteUrl("/pages/book-appointment"), lastModified: now, changeFrequency: "monthly", priority: 0.6 },
     { url: absoluteUrl("/pages/ring-size-guide"), lastModified: now, changeFrequency: "yearly", priority: 0.5 },
     { url: absoluteUrl("/guides"), lastModified: now, changeFrequency: "monthly", priority: 0.6 },
     ...GUIDES.map((g) => ({ url: absoluteUrl(`/guides/${g.slug}`), lastModified: now, changeFrequency: "yearly" as const, priority: 0.6 })),

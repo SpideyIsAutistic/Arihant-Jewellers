@@ -7,7 +7,7 @@ import { MiniProductGrid } from "@/components/product/MiniProductGrid";
 export const metadata = {
   ...pageMeta(
     "Dhanteras & Diwali Gold in Thane",
-    "Dhanteras is Friday 6 November 2026. See festive gold, silver idols and gemstones at Arihant Jewellers, Thane West, and book a showroom visit.",
+    "Dhanteras is Friday 6 November 2026. See festive gold, silver idols and gemstones at Arihant Jewellers, Thane West, and enquire on WhatsApp.",
     "/festive/dhanteras-diwali",
   ),
   alternates: {
@@ -24,7 +24,7 @@ const FAQS = [
   },
   {
     q: "Can I reserve a piece before Dhanteras?",
-    a: "Yes. Enquire on WhatsApp or book a showroom visit, and our team will keep the pieces you like ready. The final price follows the gold rate on the day you buy.",
+    a: "Yes. Enquire on WhatsApp and our team will keep the pieces you like ready. The final price follows the gold rate on the day you buy.",
   },
   { q: "Is your gold hallmarked?", a: "Gold jewellery sold in India must carry the BIS hallmark with its purity and HUID code. Ask us to show you the hallmark on any piece." },
 ];

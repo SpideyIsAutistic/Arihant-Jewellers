@@ -2,6 +2,12 @@
   command = "npm run build"
   publish = "out"
 
+# Book-a-visit page removed (enquiries go through WhatsApp/contact)
+[[redirects]]
+  from = "/pages/book-appointment"
+  to = "/pages/contact"
+  status = 301
+
 [[redirects]]
   from = "/collection/catalogue"
   to = "/collections/catalogue"

@@ -49,8 +49,8 @@ const POPUPS = [
     art: "dhanteras",
     eyebrow: "Dhanteras · Friday 6 November",
     title: "Celebrate Dhanteras at Arihant",
-    text: "See festive gold, diamonds and silver idols in the showroom. Book a time and we'll have your picks ready.",
-    cta: { label: "Book a Dhanteras visit", href: "/festive/dhanteras-diwali" },
+    text: "See festive gold, diamonds and silver idols in the showroom. Tell us what you like and we'll have it ready.",
+    cta: { label: "See Dhanteras picks", href: "/festive/dhanteras-diwali" },
     alt: { label: "Today's gold rate", href: "/gold-rate-today" },
   },
   {

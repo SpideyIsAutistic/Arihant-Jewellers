@@ -65,7 +65,7 @@ export function CustomerLogin() {
           setStep("confirm"); // link opened on another device: ask which email it was sent to
           setOpen(true);
         }
-      } else if (!u && !store.get(DISMISSED)) setOpen(true);
+      }
     });
     return () => {
       off();

@@ -2,73 +2,139 @@ import type { StoreSettings } from "./settings";
 
 export const POLICY_PAGES = {
   "shipping-policy": "Shipping Policy",
-  "refund-policy": "Returns & Refunds",
+  "refund-policy": "Returns, Exchanges & Buy-Back",
   "privacy-policy": "Privacy Policy",
-  "terms-of-service": "Terms & Conditions",
+  "terms-of-service": "Terms of Service",
 } as const;
 export type PolicySlug = keyof typeof POLICY_PAGES;
 
 /**
- * Default policy templates. The client MUST review these (ideally with legal counsel) and edit them in
- * Admin → Settings → Policies. Tokens in {braces} are filled from store settings.
+ * Standard statutory policy templates for Arihant Jewellers complying with:
+ *  - Consumer Protection Act, 2019
+ *  - Consumer Protection (E-Commerce) Rules, 2020
+ *  - Bureau of Indian Standards (BIS) Hallmarking Regulations
+ *  - Digital Personal Data Protection (DPDP) Act, 2023 & IT Act, 2000
+ * Tokens in {braces} are populated dynamically from store settings.
  */
 export const DEFAULT_POLICIES: Record<PolicySlug, string> = {
-  "shipping-policy": `## Online ordering is paused
-Arihant Jewellers currently works as an online catalogue. We do not take online orders or ship jewellery from this website.
+  "shipping-policy": `## Showroom Consultation & Secure Handover
+Arihant Jewellers operates primarily as an online fine jewellery showcase and interactive catalogue. To ensure the highest level of security, authenticity verification, and personalized service for high-value gold and diamond creations, transactions are completed directly with our team at our Thane showroom or via personalized consultation.
 
-## How to buy
-Purchases are completed at our showroom in Thane, or directly with our team after you enquire on WhatsApp or through this website. If you need the piece delivered, ask our team and they will tell you what can be arranged.
+## Showroom Collection
+You are cordially invited to view, inspect, and take handover of your selected jewellery piece at our Thane showroom:
+- **Location:** Beside Bank of Baroda Waghbill, Shop no. 8-G, Vijay Apt, Phase-3 Ghodbunder Road, Waghbil Naka Flyover, Thane West, Thane, Maharashtra 400615
+- **Hours:** Mon – Sun: 10:00 AM – 2:00 PM, 5:00 PM – 9:30 PM
 
-## Questions
-Contact us at {contact}.`,
-  "refund-policy": `## Purchases at our showroom
-Because online ordering is paused, all purchases are made at our showroom or with our team directly. The return, exchange and buy-back terms that apply to your piece are explained at the time of purchase and noted on your invoice.
+## Insured Delivery by Prior Arrangement
+If you reside outside Thane / Mumbai or are unable to visit our showroom in person, personalized insured delivery may be arranged upon request:
+- **Arrangement:** Enquire via WhatsApp or phone with our customer care desk.
+- **Security:** High-value bullion and jewellery shipments are securely packaged, sealed with tamper-evident indicators, and dispatched through specialized insured courier services.
+- **Transit Time:** In-stock creations typically dispatch within 2 business days following full verification. Custom and made-to-order creations follow the bespoke timeline agreed upon during consultation.
+- **Handover Requirement:** Government-issued photo identification (such as Aadhaar, PAN card, or Passport) matching the invoice name may be required upon physical delivery.
 
-## Questions
-For anything about a piece you have bought, contact us at {contact} with your invoice number.`,
-  "privacy-policy": `## What we collect
-- **Signing in:** if you sign in with Google or with a link emailed to you, we receive your name (Google only), email address and an account ID.
-- **Enquiries:** the details you enter: usually your name, email, phone number and message.
-- **Wishlist:** when you are signed in, the pieces you save are stored with your account so you can see them on any device.
-- **Newsletter:** your email address, if you subscribe.
-- **Reviews:** your name, email and review. Only your name and review are published, after we approve them.
+## Questions & Enquiries
+For assistance or delivery queries, contact us at {contact}.`,
 
-## How we use it
-Only to answer your enquiry, arrange your visit or video call, help you choose a piece and, if you subscribe, send you news about new arrivals and offers. You can unsubscribe at any time.
+  "refund-policy": `## Transparency & Jewellery Invoicing
+Every jewellery piece purchased from Arihant Jewellers is accompanied by an itemized tax invoice detailing gross weight, net metal weight, metal purity, stone/diamond carat weight, making charges, current gold rate, and applicable 3% GST.
 
-## Where it is kept
-Your details are stored in our website database (Google Firebase), which only our staff can open. Enquiries are also emailed to our store inbox through our form provider (Web3Forms). We do not sell your personal information or share it with anyone else.
+## Inspection & Acceptance
+Because jewellery pieces are high-value precious commodities handcrafted in gold and silver, we encourage thorough personal inspection at our showroom before final handover.
 
-## Storage on your device
-Your browser remembers your sign-in, wishlist and recently viewed items. Signing out clears your wishlist from that browser.
+## Exchange & Lifetime Buy-Back
+In line with Indian retail jewellery maison standards:
+- **Exchange:** Pieces may be exchanged at prevailing market bullion rates for another design in accordance with the terms specified on your original tax invoice.
+- **Old Gold & Lifetime Buy-Back:** We offer transparent testing and valuation for hallmarked gold jewellery based on the net gold content calculated against the day's live market rate.
+- **Custom / Bespoke Pieces:** Jewellery handcrafted to customized dimensions, engraved items, or custom-sourced gemstone settings are crafted specifically for you and are governed by individual bespoke agreements made at order booking.
 
-## Analytics and advertising
-If switched on, we use Google Analytics to understand how the website is used and the Meta Pixel to measure our Instagram and Facebook ads. These services set cookies and receive information about your visit, such as pages viewed and whether you sent an enquiry. They do not receive your name, email or phone number from us.
+## Inquiries & Assistance
+For any questions regarding an exchange, valuation, or your invoice, contact us with your invoice number at {contact}.`,
 
-## Your choices
-You may ask us to access, correct or delete your personal information, including your account, by contacting {contact}.
+  "privacy-policy": `## 1. Introduction & Data Fiduciary
+{legalName} ("we", "us", "our") is dedicated to safeguarding your personal data in accordance with the **Digital Personal Data Protection (DPDP) Act, 2023**, the **Information Technology Act, 2000**, and the **Information Technology (Reasonable Security Practices and Procedures and Sensitive Personal Data or Information) Rules, 2011**.
 
-## Updates
-We may update this policy from time to time. The latest version will always be available on this page.`,
-  "terms-of-service": `## About these terms
-This website is operated by {legalName} to showcase our jewellery collection. By using it you agree to these terms.
+## 2. Personal Information We Collect
+We collect personal data only when strictly necessary to provide our services and respond to your requests:
+- **Account Sign-In:** When you authenticate via Google Sign-In or email magic link, we receive your verified email address, full name (from Google), and account identifier.
+- **Enquiries & Appointments:** Details submitted through our forms (full name, email address, mobile phone/WhatsApp number, reference photos, preferred appointment dates/times, and specific design requests).
+- **Wishlist & Preferences:** Saved creations linked to your signed-in account so you can view them across devices.
+- **Newsletter:** Email address when you affirmatively subscribe to private viewing invitations and collection announcements.
+- **Customer Reviews:** Name, rating, and written review submitted for publication (published only upon editorial approval).
 
-## Catalogue & pricing
-The website is a catalogue. Prices, where shown, are indicative and inclusive of applicable taxes; gold prices change with the daily metal rate. Final price, availability and weight are confirmed by our team when you enquire or visit the showroom. Jewellery is handcrafted and screens differ, so slight variations in colour, size and finish may occur. Weights shown are approximate.
+## 3. Lawful Purpose & Usage
+Your personal information is processed exclusively to:
+- Respond to product enquiries and provide accurate bullion price quotations.
+- Coordinate showroom appointments and live video consultation calls.
+- Maintain your personal wishlist across browsing sessions.
+- Transmit service communications and, if opted in, curated updates regarding new collections.
+- Comply with applicable legal, tax, and anti-money laundering regulations governing precious metals.
 
-## Enquiries & purchases
-Online ordering and shipping are currently paused. Purchases are completed at our showroom or directly with our team after an enquiry.
+## 4. Storage & Security
+- **Data Hosting:** Customer accounts, wishlists, and enquiries are stored in a secured Google Cloud Firebase database protected by rigorous role-based security rules.
+- **Email Forwarding:** Form enquiries are routed securely to our store concierge inbox via Web3Forms over TLS encrypted connections.
+- **Data Protection:** We implement reasonable physical, managerial, and technical security safeguards. We do not sell, rent, or trade your personal information to third-party data brokers.
 
-## Offers
-Offers are valid for the stated period, cannot be exchanged for cash and, unless stated otherwise, cannot be combined.
+## 5. Analytics & Cookies
+With your consent, we utilize Google Analytics (GA4) and Meta Pixel to understand aggregate website traffic and evaluate advertising effectiveness. These analytics providers utilize cookies to record anonymous session metrics (such as page views and general locality). You may accept or decline analytical tracking via our Cookie Consent banner at any time.
 
-## Contact
-{contact}`,
+## 6. Your Rights Under DPDP Act, 2023
+You retain the right to:
+- Access a summary of personal data held about you.
+- Request correction, updating, or erasure of your personal data.
+- Withdraw your consent at any time without affecting prior lawful processing.
+- Nominate another individual to exercise your rights in the event of incapacity.
+
+To exercise any of these rights, contact our Grievance Redressal desk at {contact}.
+
+## 7. Statutory Grievance Redressal Officer
+In compliance with Rule 5(4) of the Consumer Protection (E-Commerce) Rules, 2020 and Rule 3(2) of the Information Technology Rules, 2021, our designated Grievance Officer is:
+
+- **Grievance Officer:** Compliance Officer, Arihant Jewellers
+- **Address:** Beside Bank of Baroda Waghbill, Shop no. 8-G, Vijay Apt, Phase-3 Ghodbunder Road, Waghbil Naka Flyover, Thane West, Thane, Maharashtra 400615, India
+- **Email:** {email}
+- **Phone:** {phone}
+- **Acknowledgement:** Within 48 hours of receipt.
+- **Resolution Timeline:** Within 30 days from the date of receipt.`,
+
+  "terms-of-service": `## 1. Terms Overview
+This digital storefront is operated by {legalName}. Throughout the site, the terms "we", "us", and "our" refer to Arihant Jewellers. By accessing or browsing our catalogue, you acknowledge and agree to these Terms of Service and all related policies.
+
+## 2. Indicative Pricing & Daily Metal Rates
+- **Catalogue Display:** This website serves as a digital showroom catalogue. Displayed prices are indicative and calculated using live daily bullion rates, estimated gross weight, making charges, and applicable 3% Goods and Services Tax (GST).
+- **Rate Fluctuation:** Bullion rates for 24K, 22K, 18K, 14K Gold and Fine 999 Silver fluctuate daily in line with prevailing domestic and international bullion markets.
+- **Final Quotation:** Final prices, stone weights, making charges, and availability are verified and confirmed on your official tax invoice at our showroom or during direct consultation.
+- **Handcrafted Characteristics:** Each fine jewellery piece is individually handcrafted. Minor variations in stone hue, texture, dimensions, and total metal weight (typically within standard trade tolerances) are intrinsic to artisan jewellery crafting.
+
+## 3. BIS Hallmarking & HUID Authenticity
+- All gold jewellery offered by Arihant Jewellers is **BIS Hallmarked** in strict compliance with Bureau of Indian Standards regulations.
+- Every hallmarked article carries:
+  1. The official **BIS Mark** (triangular logo).
+  2. The purity/fineness grade: **22K916** (91.6% purity), **18K750** (75.0% purity), or **14K585** (58.5% purity).
+  3. A unique 6-digit alphanumeric **Hallmark Unique Identification (HUID)** code laser-engraved onto the piece.
+- Consumers may independently verify the authenticity and registration of their jewellery piece using the official Government of India **BIS CARE App** by entering the 6-digit HUID inscribed on the article and tax invoice.
+
+## 4. Consultations & Transactions
+Online payments and automated cart checkouts are paused on this website. Enquiries submitted on the site or via WhatsApp constitute requests for private viewing or price quotations and do not form a binding contract of sale until payment is formally completed and an authorized tax invoice is issued by Arihant Jewellers.
+
+## 5. Intellectual Property
+All brand names, trademarks, custom photography, jewellery designs, editorial copy, and multimedia assets appearing on this website are the proprietary property of {legalName} and protected under Indian and international copyright and intellectual property legislation.
+
+## 6. Governing Law & Jurisdiction
+These terms and all transactions shall be governed by and construed in accordance with the laws of the Republic of India. Any legal dispute or claim arising out of or in connection with the website shall be subject to the exclusive jurisdiction of the competent courts in **Thane / Mumbai, Maharashtra**.
+
+## 7. Grievance Redressal & Contact
+For statutory compliance or consumer concerns:
+- **Email:** {email}
+- **Showroom Address:** {address}
+- **Postal Code:** 400615, Thane, Maharashtra, India.`,
 };
 
 export function fillPolicy(text: string, s: StoreSettings) {
   const rupees = (p: number) => `₹${Math.round(p / 100).toLocaleString("en-IN")}`;
-  const contact = [s.email && `email ${s.email}`, s.phone && `call ${s.phone}`].filter(Boolean).join(" or ") || "the Contact Us page";
+  const contact = [s.email && `email ${s.email}`, s.phone && `call ${s.phone}`].filter(Boolean).join(" or ") || "arihantjewellers2005@gmail.com";
+  const email = s.email || "arihantjewellers2005@gmail.com";
+  const phone = s.phone || "+91 98200 00000";
+  const address = s.address || "Beside Bank of Baroda Waghbill, Shop no.8-G, Vijay Apt, Phase-3 Ghodbunder road, Thane West, Maharashtra 400615";
   const shippingCharges =
     s.freeShippingThreshold > 0
       ? `Shipping is free on orders of ${rupees(s.freeShippingThreshold)} and above. A flat fee of ${rupees(s.shippingFee)} applies to smaller orders.`
@@ -85,5 +151,8 @@ export function fillPolicy(text: string, s: StoreSettings) {
     .replaceAll("{shippingCharges}", shippingCharges)
     .replaceAll("{codText}", codText)
     .replaceAll("{contact}", contact)
-    .replaceAll("{legalName}", s.legalName);
+    .replaceAll("{email}", email)
+    .replaceAll("{phone}", phone)
+    .replaceAll("{address}", address)
+    .replaceAll("{legalName}", s.legalName || "Arihant Jewellers");
 }

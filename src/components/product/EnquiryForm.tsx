@@ -54,56 +54,62 @@ export function EnquiryForm({
       </p>
       <div className="grid gap-3 sm:grid-cols-2">
         <div>
-          <label htmlFor="e-name" className="sr-only">
-            Name
+          <label htmlFor="e-name" className="mb-1 block text-[11px] font-medium tracking-[0.1em] text-subtle uppercase">
+            Your Name <span className="text-danger">*</span>
           </label>
           <input
             id="e-name"
             name="name"
             defaultValue={user.displayName ?? ""}
-            placeholder="Name"
+            placeholder="Your Name"
             required
+            aria-required="true"
+            aria-invalid={!!e.name}
             className={cn("input py-2.5", e.name && "border-danger")}
           />
           {e.name && <p className="mt-1 text-[12px] text-danger">{e.name}</p>}
         </div>
         <div>
-          <label htmlFor="e-phone" className="sr-only">
-            Phone
+          <label htmlFor="e-phone" className="mb-1 block text-[11px] font-medium tracking-[0.1em] text-subtle uppercase">
+            WhatsApp / Phone
           </label>
           <input
             id="e-phone"
             name="phone"
             type="tel"
-            placeholder="Phone / WhatsApp"
+            placeholder="+91 98765 43210"
             className="input py-2.5"
           />
         </div>
       </div>
       <div>
-        <label htmlFor="e-email" className="sr-only">
-          E-mail
+        <label htmlFor="e-email" className="mb-1 block text-[11px] font-medium tracking-[0.1em] text-subtle uppercase">
+          Email Address <span className="text-danger">*</span>
         </label>
         <input
           id="e-email"
           name="email"
           defaultValue={user.email ?? ""}
           type="email"
-          placeholder="E-mail"
+          placeholder="you@example.com"
           required
+          aria-required="true"
+          aria-invalid={!!e.email}
           className={cn("input py-2.5", e.email && "border-danger")}
         />
         {e.email && <p className="mt-1 text-[12px] text-danger">{e.email}</p>}
       </div>
       <div>
-        <label htmlFor="e-message" className="sr-only">
-          Message
+        <label htmlFor="e-message" className="mb-1 block text-[11px] font-medium tracking-[0.1em] text-subtle uppercase">
+          Your Enquiry <span className="text-danger">*</span>
         </label>
         <textarea
           id="e-message"
           name="message"
           rows={3}
           defaultValue={message}
+          aria-required="true"
+          aria-invalid={!!e.message}
           className={cn("input py-2.5", e.message && "border-danger")}
         />
         {e.message && (

@@ -210,12 +210,17 @@ export function LiveRatesModal({ open, onClose, rates }: Props) {
             </div>
           </div>
 
-          {/* Transparency Guarantee */}
-          <div className="mt-4 flex items-center justify-between text-[12px] text-subtle">
-            <span className="flex items-center gap-1.5">
-              <span className="text-emerald-600">✓</span> 100% BIS Hallmarked Purity Guarantee
-            </span>
-            <span>Live rates via Google Finance</span>
+          {/* Transparency Guarantee & BIS HUID Verification */}
+          <div className="mt-5 border-t border-line/70 pt-4 space-y-2 text-[12px] text-subtle">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <span className="flex items-center gap-1.5 font-medium text-ink">
+                <span className="text-emerald-600">✓</span> 100% BIS Hallmarked Gold (22K916 · 18K750 · 14K585)
+              </span>
+              <span>Live market rates via Google Finance</span>
+            </div>
+            <p className="text-[11px] leading-relaxed text-body2">
+              Every gold piece carries the mandatory 3 hallmarking symbols including the unique 6-digit alphanumeric <strong>HUID</strong>, verifiable on the Government of India <strong>BIS CARE App</strong>.
+            </p>
           </div>
         </div>
       </div>

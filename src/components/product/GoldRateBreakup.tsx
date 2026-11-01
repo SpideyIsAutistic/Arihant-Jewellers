@@ -83,10 +83,16 @@ export function GoldRateBreakup({ breakup }: { breakup: MetalPriceBreakup }) {
             </div>
           </div>
 
-          <div className="mt-4 border-t border-line/60 pt-3 text-[11px] leading-relaxed text-subtle">
-            {breakup.ratesDate
-              ? `Based on Arihant Jewellers' rate saved ${new Date(breakup.ratesDate).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" })}. Weight is approximate; the final price is confirmed at the showroom.`
-              : "Weight is approximate; the final price is confirmed at the showroom."}
+          <div className="mt-4 border-t border-line/60 pt-3 text-[11px] leading-relaxed text-subtle space-y-1">
+            <p>
+              {breakup.ratesDate
+                ? `Based on Arihant Jewellers' rate saved ${new Date(breakup.ratesDate).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" })}.`
+                : "Live gold rates via Google Finance."}{" "}
+              Weight is approximate; final weight &amp; price are confirmed on your official tax invoice at our showroom.
+            </p>
+            <p className="text-[10px] uppercase tracking-wider text-ink/70">
+              ✓ BIS Hallmarked • 6-Digit HUID Verifiable on official BIS CARE App
+            </p>
           </div>
         </div>
       )}

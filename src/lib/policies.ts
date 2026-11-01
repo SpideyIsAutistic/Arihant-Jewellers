@@ -133,7 +133,7 @@ export function fillPolicy(text: string, s: StoreSettings) {
   const rupees = (p: number) => `₹${Math.round(p / 100).toLocaleString("en-IN")}`;
   const contact = [s.email && `email ${s.email}`, s.phone && `call ${s.phone}`].filter(Boolean).join(" or ") || "arihantjewellers2005@gmail.com";
   const email = s.email || "arihantjewellers2005@gmail.com";
-  const phone = s.phone || "+91 98200 00000";
+  const phone = s.phone || "+91 98196 59215";
   const address = s.address || "Beside Bank of Baroda Waghbill, Shop no.8-G, Vijay Apt, Phase-3 Ghodbunder road, Thane West, Maharashtra 400615";
   const shippingCharges =
     s.freeShippingThreshold > 0

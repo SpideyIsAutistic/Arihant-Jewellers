@@ -8,10 +8,10 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // The agency account that can always manage admins (bootstrap / recovery).
+    // Store Owner recovery/bootstrap authorization.
     function isOwner() {
       return request.auth != null && request.auth.token.email_verified == true
-        && request.auth.token.email.lower() in ['mpohani75@gmail.com', 'thegrowthbureauu@gmail.com'];
+        && request.auth.token.email.lower() in ['arihantjewellers2005@gmail.com', 'mpohani75@gmail.com'];
     }
     function isAdmin() {
       return isOwner()

@@ -53,7 +53,7 @@ export const DEFAULT_SETTINGS: StoreSettings = {
   legalName: "Arihant Jewellers",
   tagline: "Jewellery for every moment",
   email: "arihantjewellers2005@gmail.com",
-  phone: "",
+  phone: "+91 98196 59215",
   whatsapp: process.env.NEXT_PUBLIC_WHATSAPP || "",
   web3formsKey: process.env.NEXT_PUBLIC_WEB3FORMS_KEY || "",
   address: "Beside Bank of Baroda Waghbill, Shop no.8-G,Vijay Apt,Phase-3 Ghodbunder road, Waghbil Naka Flyover, Thane West, Thane, Maharashtra 400615",
